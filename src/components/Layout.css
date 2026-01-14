@@ -1,0 +1,21 @@
+.layout {
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+}
+
+.main-content {
+    flex: 1;
+    width: 100%;
+    /* Removed max-width to allow full-width backgrounds on Home page */
+    margin: 0;
+    padding: 0;
+}
+
+.footer {
+    text-align: center;
+    padding: var(--spacing-lg);
+    background-color: var(--color-surface);
+    border-top: 1px solid var(--color-border);
+    color: var(--color-text-light);
+}

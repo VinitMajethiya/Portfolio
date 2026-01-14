@@ -1,0 +1,87 @@
+/* Contact.css - Midnight Pro */
+
+.contact-page {
+    min-height: 80vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: var(--spacing-md);
+}
+
+.contact-container {
+    width: 100%;
+    max-width: 500px;
+}
+
+.contact-card {
+    background: var(--color-surface);
+    border: var(--border-thin);
+    padding: var(--spacing-2xl);
+    border-radius: var(--radius-lg);
+    /* Brutalist Shadow */
+    box-shadow: 10px 10px 0px rgba(124, 58, 237, 0.1);
+    transition: all 0.3s ease;
+}
+
+.contact-card:hover {
+    transform: translate(-2px, -2px);
+    box-shadow: 12px 12px 0px rgba(124, 58, 237, 0.2);
+}
+
+.contact-card h1 {
+    font-size: 2.5rem;
+    color: var(--color-text);
+    margin-bottom: var(--spacing-sm);
+}
+
+.contact-subtitle {
+    color: var(--color-text-secondary);
+    margin-bottom: var(--spacing-xl);
+    font-size: 1.1rem;
+}
+
+.contact-details {
+    display: grid;
+    gap: var(--spacing-md);
+}
+
+.detail-item {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    padding: var(--spacing-md);
+    background: rgba(255, 255, 255, 0.02);
+    border-radius: var(--radius-sm);
+    border: 1px solid transparent;
+    transition: all 0.2s ease;
+}
+
+.detail-item:hover {
+    border-color: var(--color-primary);
+    background: rgba(124, 58, 237, 0.05);
+}
+
+.label {
+    font-size: 0.8rem;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    color: var(--color-text-secondary);
+    font-family: var(--font-mono);
+}
+
+.value {
+    font-size: 1rem;
+    color: var(--color-text);
+    text-decoration: none;
+    font-weight: 500;
+    text-align: right;
+}
+
+.value.link {
+    color: var(--color-primary);
+}
+
+.value.link:hover {
+    text-decoration: underline;
+}
