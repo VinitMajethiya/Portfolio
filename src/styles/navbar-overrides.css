@@ -1,0 +1,40 @@
+/* Navbar behavior overrides and enhancements */
+
+/* Active link underline indicator */
+.navbar .navbar-links a.active {
+  position: relative;
+}
+
+.navbar .navbar-links a.active::after {
+  content: '';
+  position: absolute;
+  left: 0;
+  bottom: -6px;
+  width: 100%;
+  height: 2px;
+  background: var(--color-primary);
+  border-radius: 2px;
+}
+
+/* Mobile dropdown menu */
+@media (max-width: 768px) {
+  .navbar .navbar-container {
+    padding: var(--spacing-md) var(--spacing-lg);
+  }
+  .navbar .navbar-links.active {
+    display: flex !important;
+    flex-direction: column;
+    gap: var(--spacing-md);
+    padding: var(--spacing-md);
+    position: absolute;
+    top: 100%;
+    left: 0;
+    width: 100%;
+    background: var(--color-surface);
+    border-top: 1px solid var(--color-border);
+    border-bottom: 1px solid var(--color-border);
+    border-radius: 0 0 var(--radius-lg) var(--radius-lg);
+    box-shadow: 0 12px 40px rgba(2, 6, 23, 0.6);
+    z-index: 999;
+  }
+}

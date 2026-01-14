@@ -1,0 +1,10 @@
+/* Layout offset to account for fixed navbar */
+.main-content {
+  padding-top: 96px; /* desktop navbar height inc. padding */
+}
+
+@media (max-width: 768px) {
+  .main-content {
+    padding-top: 80px; /* slightly smaller on mobile */
+  }
+}

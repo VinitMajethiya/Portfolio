@@ -1,0 +1,55 @@
+/* Hero visual polish overrides */
+.home-page .hero-grid {
+  position: relative;
+}
+
+/* Subtle animated gradient glow behind hero */
+.home-page .hero-grid::before {
+  content: '';
+  position: absolute;
+  inset: -10% -10% auto -10%;
+  height: 300px;
+  background: radial-gradient(600px 200px at 20% 30%, rgba(124,58,237,0.25), transparent 60%),
+              radial-gradient(400px 160px at 60% 40%, rgba(251,113,133,0.18), transparent 65%);
+  filter: blur(32px);
+  pointer-events: none;
+  z-index: -1;
+}
+
+/* Enhance name gradient and thickness */
+.home-page .name-title {
+  background: linear-gradient(90deg, var(--color-text) 0%, var(--color-primary-light) 60%, var(--color-text-secondary) 100%);
+  -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent;
+  line-height: 1.06; /* prevent descender clipping */
+  margin-bottom: calc(var(--spacing-lg) + 4px); /* add breathing room below */
+  padding-bottom: 2px; /* tiny buffer for glyph descenders */
+  position: relative;
+  z-index: 1;
+}
+
+/* CTA hover states a bit stronger */
+.btn-primary-v2 {
+  box-shadow: 0 6px 18px rgba(124, 58, 237, 0.25);
+}
+.btn-primary-v2:hover { transform: translateY(-3px); }
+
+.btn-outline-v2 { backdrop-filter: var(--backdrop-blur); }
+
+/* Bento cards: add subtle shine on hover */
+.bento-box {
+  position: relative;
+  overflow: hidden;
+}
+.bento-box::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(120deg, transparent 30%, rgba(255,255,255,0.08) 50%, transparent 70%);
+  transform: translateX(-100%);
+  transition: transform .6s ease;
+}
+.bento-box:hover::after { transform: translateX(100%); }
+
+@media (max-width: 900px) {
+  .home-page .hero-grid::before { height: 220px; filter: blur(28px); }
+}

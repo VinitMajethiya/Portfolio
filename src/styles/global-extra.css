@@ -1,0 +1,44 @@
+/* Global UX enhancements */
+
+/* Smooth scrolling for in-page navigation */
+html:focus-within {
+  scroll-behavior: smooth;
+}
+
+/* Text selection color */
+::selection {
+  background: rgba(124, 58, 237, 0.35);
+  color: #fff;
+}
+
+/* Accessible focus rings */
+:focus-visible {
+  outline: 2px solid var(--color-primary);
+  outline-offset: 2px;
+}
+
+a:focus-visible,
+button:focus-visible,
+.btn-primary-v2:focus-visible,
+.btn-outline-v2:focus-visible {
+  box-shadow: 0 0 0 4px rgba(124, 58, 237, 0.25);
+}
+
+/* Container utility */
+.container {
+  width: 100%;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding-left: var(--spacing-md);
+  padding-right: var(--spacing-md);
+}
+
+/* Respect reduced motion */
+@media (prefers-reduced-motion: reduce) {
+  * {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}

@@ -1,5 +1,7 @@
 import React, { useState } from 'react';
 import './Navbar.css';
+import { NavLink } from 'react-router-dom';
+import ThemeToggle from './ThemeToggle';
 
 const Navbar = () => {
     const [isOpen, setIsOpen] = useState(false);
@@ -7,23 +9,25 @@ const Navbar = () => {
     return (
         <nav className="navbar">
             <div className="navbar-container">
-                <a href="/" className="navbar-logo">
+                <NavLink to="/" className="navbar-logo" onClick={() => setIsOpen(false)}>
                     VM
-                </a>
+                </NavLink>
 
                 <button
                     className="navbar-toggle"
                     onClick={() => setIsOpen(!isOpen)}
                     aria-label="Toggle navigation"
+                    aria-expanded={isOpen}
                 >
                     <span className="hamburger"></span>
                 </button>
 
                 <div className={`navbar-links ${isOpen ? 'active' : ''}`}>
-                    <a href="/" onClick={() => setIsOpen(false)}>Home</a>
-                    <a href="/about" onClick={() => setIsOpen(false)}>About</a>
-                    <a href="/projects" onClick={() => setIsOpen(false)}>Projects</a>
-                    <a href="/contact" onClick={() => setIsOpen(false)}>Contact</a>
+                    <NavLink to="/" onClick={() => setIsOpen(false)} className={({ isActive }) => isActive ? 'active' : undefined}>Home</NavLink>
+                    <NavLink to="/about" onClick={() => setIsOpen(false)} className={({ isActive }) => isActive ? 'active' : undefined}>About</NavLink>
+                    <NavLink to="/projects" onClick={() => setIsOpen(false)} className={({ isActive }) => isActive ? 'active' : undefined}>Projects</NavLink>
+                    <NavLink to="/contact" onClick={() => setIsOpen(false)} className={({ isActive }) => isActive ? 'active' : undefined}>Contact</NavLink>
+                    <ThemeToggle />
                 </div>
             </div>
         </nav>

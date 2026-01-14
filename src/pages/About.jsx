@@ -133,6 +133,7 @@ const About = () => {
                     <h2>🏆 Leadership & Awards</h2>
                     <ul className="leadership-list">
                         <li><strong>Secretary</strong> – AIML Student Association</li>
+                        <li><strong>Google Student Ambassador</strong></li>
                         <li><strong>Student Relations Officer</strong> – AIMLSA (Previous)</li>
                         <li><strong>Smart India Hackathon (SIH)</strong> – Qualified College Round</li>
                         <li><strong>CodeFiesta Hackathon</strong> – Participant (Jaipur)</li>

@@ -1,0 +1,30 @@
+/* Theme-aware navbar and nav links */
+
+/* Use variable-based glass background so it adapts by theme */
+.navbar {
+  background: var(--glass-bg, rgba(2, 6, 23, 0.7));
+  border-bottom: 1px solid var(--color-border);
+}
+
+/* Links pill uses surfaces and borders already from variables */
+.navbar .navbar-links {
+  background: var(--color-surface);
+  border-color: var(--color-border);
+}
+
+.navbar .navbar-logo {
+  background: var(--color-surface);
+  border-color: var(--color-border);
+  color: var(--color-text);
+}
+
+/* Light theme tweaks */
+:root[data-theme="light"] .navbar,
+[data-theme="light"] .navbar {
+  background: rgba(255, 255, 255, 0.72);
+}
+
+:root[data-theme="light"] .navbar .navbar-links,
+[data-theme="light"] .navbar .navbar-links {
+  background: rgba(255, 255, 255, 0.92);
+}
