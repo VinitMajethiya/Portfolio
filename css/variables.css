@@ -1,0 +1,90 @@
+/* variables.css — Design system tokens supporting dual themes */
+
+:root {
+  /* === TYPOGRAPHY === */
+  --font-display: 'Playfair Display', Georgia, serif;
+  --font-mono:    'DM Mono', 'Courier New', monospace;
+  --font-serif:   'Cormorant Garamond', Georgia, serif;
+
+  /* === TYPE SCALE === */
+  --text-xs:   0.75rem;    /* 12px — labels, tags */
+  --text-sm:   0.875rem;   /* 14px — metadata, captions */
+  --text-base: 1rem;       /* 16px — body */
+  --text-lg:   1.125rem;   /* 18px — lead text */
+  --text-xl:   1.375rem;   /* 22px — subheadings */
+  --text-2xl:  1.75rem;    /* 28px — H3 */
+  --text-3xl:  2.5rem;     /* 40px — H2 */
+  --text-4xl:  3.75rem;    /* 60px — H1 */
+  --text-hero: clamp(1.8rem, 4.8vw, 4.2rem); /* fluid hero text */
+
+  /* === LAYOUT & SPACING === */
+  --container-max: 1200px;
+  --container-pad: clamp(1.5rem, 5vw, 5rem);
+  --section-gap:   clamp(4rem, 8vw, 7.5rem);
+  --grid-cols:     12;
+  --gutter:        1.5rem;
+
+  --space-1:  0.25rem;
+  --space-2:  0.5rem;
+  --space-3:  0.75rem;
+  --space-4:  1rem;
+  --space-6:  1.5rem;
+  --space-8:  2rem;
+  --space-12: 3rem;
+  --space-16: 4rem;
+  --space-24: 6rem;
+
+  /* === RESPONSIVE BREAKPOINTS === */
+  --bp-sm:  480px;
+  --bp-md:  768px;
+  --bp-lg:  1024px;
+  --bp-xl:  1280px;
+}
+
+/* === THEME 1: PAPER EDITORIAL (Light / Default / Screenshot-based) === */
+.theme-paper {
+  --bg-primary:      #FAF9FC;   /* off-white, light lilac-gray tint */
+  --bg-secondary:    #F5F3F8;   /* cards and section backdrops */
+  --bg-tertiary:     #EEEDF5;   /* hover cards, lists */
+  --bg-surface:      #ECEAF2;   /* facts boxes background */
+
+  --text-primary:    #181524;   /* deep violet-black for main headings */
+  --text-secondary:  #555062;   /* charcoal-purple for descriptions */
+  --text-tertiary:   #888398;   /* muted lilac-grey for metadata/labels */
+  --text-inverse:    #FAF9FC;   /* text color on dark/accent backgrounds */
+
+  --accent-primary:   #004D40;  /* deep forest green/teal */
+  --accent-secondary: #00695C;  /* medium dark green */
+  --accent-glow:      rgba(0, 77, 64, 0.08);
+
+  --border-subtle:   #E2DFEB;   /* grid lines and lines */
+  --border-medium:   #D5D1E4;   /* card outlines */
+  --border-accent:   rgba(0, 77, 64, 0.25);
+
+  --noise-opacity:   0.02;      /* soft organic page grain */
+  --shadow-color:    rgba(24, 21, 36, 0.05);
+}
+
+/* === THEME 2: WARM NOIR (Dark / Warm Charcoal-Amber) === */
+.theme-noir {
+  --bg-primary:      #0E0C0A;   /* near-black, warm brown undertone */
+  --bg-secondary:    #161310;   /* slightly lighter card base */
+  --bg-tertiary:     #1F1A16;   /* hover/elevation layers */
+  --bg-surface:      #252018;   /* side blocks background */
+
+  --text-primary:    #F0EAE0;   /* warm cream headings */
+  --text-secondary:  #A89F94;   /* warm muted gray body */
+  --text-tertiary:   #6B6259;   /* brown-gray labels and metadata */
+  --text-inverse:    #0E0C0A;   /* dark text on orange badges */
+
+  --accent-primary:   #D4854A;  /* burnt orange / copper */
+  --accent-secondary: #8C6A3F;  /* dark amber / brass */
+  --accent-glow:      rgba(212, 133, 74, 0.15);
+
+  --border-subtle:   #2A2420;   /* separation lines */
+  --border-medium:   #3D3228;   /* card borders */
+  --border-accent:   rgba(212, 133, 74, 0.35);
+
+  --noise-opacity:   0.035;     /* more pronounced film grain overlay */
+  --shadow-color:    rgba(0, 0, 0, 0.5);
+}

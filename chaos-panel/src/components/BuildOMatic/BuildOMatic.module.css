@@ -1,0 +1,300 @@
+/* BuildOMatic.module.css — CSS module for Build-o-Matic junk lab */
+
+.container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 100%;
+  max-width: 800px;
+  margin: 0 auto;
+}
+
+.title {
+  font-family: var(--font-display);
+  font-size: 24px;
+  font-weight: 900;
+  letter-spacing: 0.15em;
+  color: var(--neon-green);
+  margin-bottom: var(--chaos-space-2);
+  text-shadow: 0 0 10px rgba(57, 255, 20, 0.4);
+}
+
+.subtitle {
+  font-family: var(--font-ui);
+  font-size: var(--text-xs);
+  color: var(--pixel-muted);
+  margin-bottom: var(--chaos-space-6);
+  text-transform: uppercase;
+  text-align: center;
+}
+
+/* Preset chips */
+.quickChips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--chaos-space-2);
+  width: 100%;
+  align-items: center;
+  margin-bottom: var(--chaos-space-4);
+  font-family: var(--font-ui);
+  font-size: var(--text-xs);
+}
+
+.chipsLabel {
+  color: var(--pixel-muted);
+  font-weight: 700;
+}
+
+.chip {
+  font-size: 10px !important;
+  border: 2px solid var(--pixel-grid) !important;
+  background-color: var(--chaos-surface) !important;
+  color: var(--pixel-white) !important;
+  padding: 4px 8px !important;
+  cursor: pointer;
+}
+
+.chip:hover:not(:disabled) {
+  border-color: var(--neon-green) !important;
+  color: var(--neon-green) !important;
+  box-shadow: 0 0 8px rgba(57, 255, 20, 0.3) !important;
+}
+
+/* Input layout */
+.inputWrapper {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: var(--chaos-space-3);
+  margin-bottom: var(--chaos-space-4);
+}
+
+.textarea {
+  width: 100%;
+  background-color: var(--chaos-surface) !important;
+  border: 2px solid var(--pixel-grid) !important;
+  border-radius: 2px;
+  padding: var(--chaos-space-3) !important;
+  color: var(--pixel-white) !important;
+  resize: vertical;
+  line-height: 1.6;
+}
+
+.submitBtn {
+  font-family: var(--font-pixel) !important;
+  font-size: 9px !important;
+  padding: var(--chaos-space-4) 0 !important;
+  width: 100%;
+  color: var(--neon-green) !important;
+  border-color: var(--neon-green) !important;
+}
+
+.submitBtn:hover:not(:disabled) {
+  background-color: var(--neon-green) !important;
+  color: var(--text-inverse) !important;
+}
+
+/* Loading animations */
+.loaderContainer {
+  width: 100%;
+  background-color: var(--chaos-surface);
+  border: 2px solid var(--pixel-grid);
+  padding: var(--chaos-space-4);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--chaos-space-2);
+  margin-bottom: var(--chaos-space-6);
+}
+
+.loaderText {
+  font-family: var(--font-ui);
+  font-size: var(--text-xs);
+  color: var(--pixel-white);
+  text-transform: uppercase;
+}
+
+.progressBar {
+  width: 100%;
+  height: 12px;
+  background-color: var(--chaos-bg);
+  border: 1px solid var(--pixel-muted);
+  overflow: hidden;
+  position: relative;
+}
+
+.progressFill {
+  background-color: var(--neon-green);
+  box-shadow: 0 0 10px rgba(57, 255, 20, 0.6);
+}
+
+.loaderSub {
+  font-size: 10px;
+  color: var(--pixel-muted);
+  font-family: var(--font-ui);
+}
+
+.errorBox {
+  width: 100%;
+  border: 2px solid var(--neon-pink);
+  background-color: rgba(255, 45, 120, 0.1);
+  color: var(--neon-pink);
+  padding: var(--chaos-space-3);
+  font-family: var(--font-ui);
+  font-size: var(--text-sm);
+  margin-bottom: var(--chaos-space-6);
+  text-align: center;
+}
+
+.unlockedCounter {
+  font-family: var(--font-pixel);
+  font-size: 8px;
+  color: var(--pixel-gold);
+  margin-bottom: var(--chaos-space-6);
+}
+
+/* Build Card Style */
+.buildCard {
+  width: 100%;
+  border: 4px solid var(--pixel-white);
+  background-color: var(--chaos-surface);
+  padding: var(--chaos-space-6);
+  box-shadow: 0 0 15px rgba(57, 255, 20, 0.15);
+}
+
+.cardHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-bottom: 2px solid var(--pixel-grid);
+  padding-bottom: var(--chaos-space-3);
+  margin-bottom: var(--chaos-space-4);
+  font-family: var(--font-display);
+  font-size: var(--text-sm);
+  font-weight: 700;
+  color: var(--pixel-white);
+}
+
+.copyBtn {
+  font-family: var(--font-pixel) !important;
+  font-size: 8px !important;
+  color: var(--neon-green) !important;
+  border-color: var(--neon-green) !important;
+  padding: 2px 6px !important;
+}
+
+.copyBtn:hover {
+  background-color: var(--neon-green) !important;
+  color: var(--text-inverse) !important;
+  box-shadow: 0 0 10px rgba(57, 255, 20, 0.4) !important;
+}
+
+.cardSection {
+  border-bottom: 2px solid var(--pixel-grid);
+  padding-bottom: var(--chaos-space-4);
+  margin-bottom: var(--chaos-space-4);
+}
+
+.projectName {
+  font-family: var(--font-display);
+  font-size: var(--text-xl);
+  font-weight: 900;
+  color: var(--neon-green);
+  margin-bottom: var(--chaos-space-3);
+}
+
+.projectStats {
+  display: flex;
+  flex-direction: column;
+  gap: var(--chaos-space-2);
+}
+
+.projectStatLine {
+  display: grid;
+  grid-template-columns: 180px 1fr;
+  align-items: center;
+  font-family: var(--font-ui);
+  font-size: var(--text-sm);
+}
+
+.statLabel {
+  color: var(--pixel-muted);
+}
+
+.statBlocks {
+  font-family: monospace;
+  color: var(--pixel-white);
+  letter-spacing: 1px;
+}
+
+.timeVal {
+  color: var(--neon-green);
+  font-weight: 700;
+}
+
+.sectionTitle {
+  font-family: var(--font-display);
+  font-size: var(--text-sm);
+  color: var(--pixel-white);
+  margin-bottom: var(--chaos-space-3);
+}
+
+.partsList {
+  display: flex;
+  flex-direction: column;
+  gap: var(--chaos-space-2);
+}
+
+.partsList li {
+  font-family: var(--font-ui);
+  font-size: var(--text-sm);
+  color: var(--pixel-white);
+}
+
+.instructionsList {
+  display: flex;
+  flex-direction: column;
+  gap: var(--chaos-space-3);
+}
+
+.instructionsList li {
+  font-family: var(--font-ui);
+  font-size: var(--text-sm);
+  color: var(--pixel-white);
+  line-height: 1.6;
+}
+
+.stepNum {
+  color: var(--neon-green);
+  font-weight: 700;
+  margin-right: var(--chaos-space-1);
+}
+
+/* Comment Box */
+.commentSection {
+  background-color: var(--chaos-bg);
+  border-left: 3px solid var(--neon-green);
+  padding: var(--chaos-space-3);
+  font-family: var(--font-ui);
+}
+
+.commentLabel {
+  font-size: var(--text-xs);
+  color: var(--pixel-muted);
+  font-weight: 700;
+  display: block;
+  margin-bottom: var(--chaos-space-1);
+}
+
+.commentText {
+  font-size: var(--text-sm);
+  color: var(--pixel-white);
+  font-style: italic;
+}
+
+@media (max-width: 560px) {
+  .projectStatLine {
+    grid-template-columns: 1fr;
+    gap: var(--chaos-space-1);
+  }
+}

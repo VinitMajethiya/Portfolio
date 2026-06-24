@@ -1,0 +1,37 @@
+/* chaos-variables.css — CSS variables for Chaos Mode */
+
+:root {
+  /* === BACKGROUNDS === */
+  --chaos-bg:         #0A0A0F;   /* near-black, blue-black undertone */
+  --chaos-surface:    #12121A;   /* card backgrounds */
+  --chaos-elevated:   #1A1A26;   /* elevated panels */
+
+  /* === NEON ACCENTS === */
+  --neon-orange:      #FF6B35;   /* alien shooter, primary accent */
+  --neon-cyan:        #00F5FF;   /* guitar lab */
+  --neon-pink:        #FF2D78;   /* book analyser */
+  --neon-green:       #39FF14;   /* junk lab */
+
+  /* === PIXEL / RETRO === */
+  --pixel-gold:       #FFD700;   /* scores, hi-score */
+  --pixel-white:      #E8E8F0;   /* primary text */
+  --pixel-muted:      #6B6B8A;   /* secondary text */
+  --pixel-grid:       #1A1A2E;   /* background grid lines */
+
+  /* === FONTS === */
+  --font-pixel:   'Press Start 2P', monospace;
+  --font-ui:      'Space Mono', monospace;
+  --font-display: 'Orbitron', sans-serif;
+
+  /* === SCANLINES === */
+  --scanline-opacity: 0.04;
+
+  /* === SPACINGS === */
+  --chaos-space-1: 0.25rem;
+  --chaos-space-2: 0.5rem;
+  --chaos-space-3: 0.75rem;
+  --chaos-space-4: 1rem;
+  --chaos-space-6: 1.5rem;
+  --chaos-space-8: 2rem;
+  --chaos-space-12: 3rem;
+}

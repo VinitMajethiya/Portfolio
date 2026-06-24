@@ -1,0 +1,165 @@
+/* layout.css — Structural systems, grid divisions, and spacing */
+
+.container {
+  width: 100%;
+  max-width: var(--container-max);
+  margin-left: auto;
+  margin-right: auto;
+  padding-left: var(--container-pad);
+  padding-right: var(--container-pad);
+  position: relative;
+}
+
+.section {
+  padding-top: var(--section-gap);
+  padding-bottom: var(--section-gap);
+  position: relative;
+}
+
+.section-alt {
+  background-color: var(--bg-secondary);
+}
+
+/* Section Spine Label (e.g. 01 / HISTORY / ABOUT) */
+.section-label {
+  font-family: var(--font-mono);
+  font-size: var(--text-xs);
+  color: var(--text-tertiary);
+  font-weight: 500;
+  letter-spacing: 0.15em;
+  margin-bottom: var(--space-4);
+  text-transform: uppercase;
+}
+
+.section-title {
+  font-size: var(--text-3xl);
+  color: var(--text-primary);
+  margin-bottom: var(--space-6);
+  font-family: var(--font-display);
+}
+
+/* ==================== ABOUT GRID ==================== */
+.about-grid {
+  display: grid;
+  grid-template-columns: 1.5fr 1fr; /* Asymmetric 60/40 split */
+  gap: var(--space-12);
+  align-items: start;
+}
+
+.about-story {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+}
+
+.about-cards-col {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-6);
+}
+
+/* ==================== STATS BLOCK ==================== */
+.section-stats {
+  padding-top: var(--space-12);
+  padding-bottom: var(--space-12);
+  background-color: var(--bg-secondary);
+}
+
+.border-y {
+  border-top: 1px solid var(--border-subtle);
+  border-bottom: 1px solid var(--border-subtle);
+}
+
+.stats-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr); /* 4 columns on desktop */
+  gap: var(--space-8);
+}
+
+/* ==================== PROJECTS LIST ==================== */
+.projects-list {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-24); /* Large vertical spacing between projects */
+  margin-top: var(--space-12);
+}
+
+.project-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr; /* Equal split: info & mockup */
+  gap: var(--space-12);
+  align-items: center;
+  position: relative;
+  min-height: 420px;
+}
+
+.project-row-reverse {
+  direction: ltr; /* Ensure layout shifts visually but stays keyboard normal */
+}
+
+.project-row-reverse .project-info {
+  grid-column: 2;
+}
+
+.project-row-reverse .project-mockup-wrapper {
+  grid-column: 1;
+  grid-row: 1;
+}
+
+.project-info {
+  display: flex;
+  flex-direction: column;
+  position: relative;
+  z-index: 2;
+}
+
+.project-mockup-wrapper {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: relative;
+  z-index: 2;
+  width: 100%;
+}
+
+/* Absolute Watermark Numbers behind projects */
+.project-watermark {
+  position: absolute;
+  font-family: var(--font-display);
+  font-size: clamp(10rem, 25vw, 24rem);
+  font-weight: 700;
+  color: var(--border-medium);
+  opacity: 0.08;
+  pointer-events: none;
+  user-select: none;
+  z-index: 0;
+  line-height: 1;
+}
+
+.project-row:nth-child(odd) .project-watermark {
+  right: -5%;
+  top: -10%;
+}
+
+.project-row:nth-child(even) .project-watermark {
+  left: -5%;
+  top: -10%;
+}
+
+/* ==================== CONTACT GRID ==================== */
+.contact-grid {
+  display: grid;
+  grid-template-columns: 1.2fr 1fr;
+  gap: var(--space-12);
+  align-items: start;
+}
+
+.contact-intro {
+  display: flex;
+  flex-direction: column;
+}
+
+.contact-channels {
+  display: flex;
+  flex-direction: column;
+}

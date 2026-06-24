@@ -1,0 +1,197 @@
+/* responsive.css — Mobile-first overrides and media queries */
+
+/* ==================== MOBILE & TABLET (default / below 768px) ==================== */
+
+/* Asymmetric grids default to single-column stacking */
+.about-grid,
+.contact-grid {
+  grid-template-columns: 1fr;
+  gap: var(--space-8);
+}
+
+.stats-grid {
+  grid-template-columns: repeat(2, 1fr); /* 2 columns on mobile/tablet */
+  gap: var(--space-6);
+}
+
+/* Projects Stack */
+.project-row {
+  grid-template-columns: 1fr; /* Stack mockup and text vertically */
+  gap: var(--space-6);
+  min-height: auto;
+  padding-bottom: var(--space-12);
+  border-bottom: 1px solid var(--border-subtle);
+}
+
+.project-row-reverse .project-info {
+  grid-column: 1;
+}
+
+.project-row-reverse .project-mockup-wrapper {
+  grid-column: 1;
+  grid-row: auto;
+}
+
+.project-watermark {
+  display: none; /* Hide watermarks on mobile to reduce visual noise */
+}
+
+/* Polaroid Deck stacked vertically on mobile */
+.polaroid-deck {
+  height: auto;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--space-8);
+  padding-top: var(--space-4);
+  padding-bottom: var(--space-8);
+}
+
+.polaroid-card {
+  position: relative;
+  left: auto;
+  top: auto;
+  transform: rotate(1deg);
+  width: 100%;
+  max-width: 290px;
+}
+
+.polaroid-card:nth-child(even) {
+  transform: rotate(-1deg);
+}
+
+/* Mobile Nav Drawer styling */
+.nav-links {
+  position: fixed;
+  top: 0;
+  right: -100%;
+  width: 80vw;
+  height: 100svh;
+  background-color: var(--bg-secondary);
+  border-left: 1px solid var(--border-medium);
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: var(--space-8);
+  transition: right 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+  z-index: 99;
+  box-shadow: -10px 0 30px var(--shadow-color);
+}
+
+.nav-links.active {
+  right: 0;
+}
+
+.nav-links li a {
+  font-size: var(--text-lg);
+  display: block;
+  padding: var(--space-2);
+}
+
+.nav-actions {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+}
+
+.nav-cta {
+  display: none !important;
+}
+
+/* Hamburger toggle visibility */
+.nav-toggle {
+  display: flex;
+}
+
+/* Hide custom cursor on touch/pointer-coarse devices */
+@media (hover: none) and (pointer: coarse) {
+  .cursor-dot {
+    display: none !important;
+  }
+}
+
+
+/* ==================== TABLET & DESKTOP (768px and up) ==================== */
+@media (min-width: 768px) {
+  
+  .about-grid {
+    grid-template-columns: 1.5fr 1fr;
+  }
+
+  .stats-grid {
+    grid-template-columns: repeat(4, 1fr); /* 4 columns on desktop */
+  }
+
+  .project-row {
+    grid-template-columns: 1fr 1fr;
+    gap: var(--space-12);
+    border-bottom: none;
+    padding-bottom: 0;
+  }
+
+  .project-row-reverse .project-info {
+    grid-column: 2;
+  }
+
+  .project-row-reverse .project-mockup-wrapper {
+    grid-column: 1;
+    grid-row: 1;
+  }
+
+  .project-watermark {
+    display: block;
+  }
+
+  .contact-grid {
+    grid-template-columns: 1.2fr 1fr;
+  }
+
+  /* Polaroid Deck: floating position restore */
+  .polaroid-deck {
+    height: 520px;
+    display: block;
+  }
+
+  .polaroid-card {
+    position: absolute;
+    width: 280px;
+  }
+
+  #cardMusic { left: 5%; top: 40px; transform: rotate(-3deg); }
+  #cardGaming { left: 30%; top: 60px; transform: rotate(2deg); }
+  #cardMaking { left: 55%; top: 30px; transform: rotate(-1deg); }
+  #cardRunning { left: 78%; top: 70px; transform: rotate(4deg); }
+
+  /* Reset mobile nav components */
+  .nav-toggle {
+    display: none;
+  }
+
+  .nav-links {
+    position: static;
+    width: auto;
+    height: auto;
+    background-color: transparent;
+    border-left: none;
+    flex-direction: row;
+    gap: var(--space-4);
+    transition: none;
+    box-shadow: none;
+  }
+
+  .nav-links li a {
+    font-size: var(--text-xs);
+    padding: var(--space-2) var(--space-3);
+  }
+
+  .nav-cta {
+    display: inline-block !important;
+  }
+}
+
+/* ==================== LARGE SCREEN SHIFTS (1024px and up) ==================== */
+@media (min-width: 1024px) {
+  .nav-links {
+    gap: var(--space-6);
+  }
+}

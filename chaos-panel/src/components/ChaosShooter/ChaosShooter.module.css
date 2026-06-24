@@ -1,0 +1,187 @@
+/* ChaosShooter.module.css — CSS module for arcade game */
+
+.shooterContainer {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 100%;
+  max-width: 800px;
+  margin: 0 auto;
+}
+
+.scoreboard {
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-family: var(--font-pixel);
+  font-size: 9px;
+  color: var(--pixel-white);
+  padding: var(--chaos-space-2) 0;
+  border-bottom: 2px solid var(--pixel-grid);
+  margin-bottom: var(--chaos-space-4);
+  flex-wrap: wrap;
+  gap: var(--chaos-space-2);
+}
+
+.coffeeBoost {
+  color: var(--neon-green);
+  text-shadow: 0 0 8px rgba(57, 255, 20, 0.4);
+  animation: boostBlink 1s step-end infinite;
+}
+
+@keyframes boostBlink {
+  50% { opacity: 0.6; }
+}
+
+.canvasWrapper {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 800 / 450;
+  border: 4px solid var(--pixel-white);
+  overflow: hidden;
+  box-shadow: 0 0 20px rgba(0, 245, 255, 0.15);
+}
+
+.gameCanvas {
+  width: 100%;
+  height: 100%;
+  display: block;
+  background-color: #000;
+}
+
+/* Overlays */
+.overlay {
+  position: absolute;
+  inset: 0;
+  background-color: rgba(10, 10, 15, 0.92);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  padding: var(--chaos-space-4);
+  z-index: 10;
+}
+
+.title {
+  font-family: var(--font-display);
+  font-size: 28px;
+  font-weight: 900;
+  letter-spacing: 0.15em;
+  color: var(--neon-orange);
+  margin-bottom: var(--chaos-space-2);
+  text-shadow: 0 0 10px rgba(255, 107, 53, 0.4);
+}
+
+.redText {
+  color: var(--neon-pink) !important;
+  text-shadow: 0 0 10px rgba(255, 45, 120, 0.4);
+}
+
+.goldText {
+  color: var(--pixel-gold) !important;
+  text-shadow: 0 0 10px rgba(255, 215, 0, 0.4);
+}
+
+.subtitle {
+  font-family: var(--font-ui);
+  font-size: var(--text-sm);
+  color: var(--pixel-muted);
+  margin-bottom: var(--chaos-space-8);
+  text-transform: uppercase;
+}
+
+.scoreSummary {
+  font-family: var(--font-pixel);
+  font-size: var(--text-base);
+  color: var(--pixel-white);
+  margin-bottom: var(--chaos-space-8);
+}
+
+.arcadeBtn {
+  font-family: var(--font-pixel) !important;
+  font-size: var(--text-xs) !important;
+  color: var(--pixel-white) !important;
+  border: 4px solid var(--pixel-white) !important;
+  padding: var(--chaos-space-4) var(--chaos-space-8) !important;
+  background-color: transparent !important;
+  cursor: pointer;
+  box-shadow: 0 0 10px rgba(232, 232, 240, 0.2);
+}
+
+.arcadeBtn:hover {
+  background-color: var(--pixel-white) !important;
+  color: var(--chaos-bg) !important;
+  box-shadow: 0 0 20px rgba(232, 232, 240, 0.6) !important;
+}
+
+.controlsInfo {
+  margin-top: var(--chaos-space-8);
+  font-size: var(--text-xs);
+  color: var(--pixel-muted);
+}
+
+.controlsInfo span {
+  color: var(--pixel-white);
+  border: 1px solid var(--pixel-muted);
+  padding: 1px 4px;
+  background-color: var(--chaos-surface);
+}
+
+/* Mobile Controls Styling */
+.mobileControls {
+  display: flex;
+  justify-content: center;
+  gap: var(--chaos-space-6);
+  width: 100%;
+  margin-top: var(--chaos-space-4);
+  padding-bottom: var(--chaos-space-2);
+}
+
+.controlBtn {
+  font-family: var(--font-pixel) !important;
+  font-size: var(--text-base) !important;
+  padding: var(--chaos-space-4) var(--chaos-space-8) !important;
+  border: 3px solid var(--pixel-muted) !important;
+  background-color: var(--chaos-surface) !important;
+  color: var(--pixel-white) !important;
+  flex: 1;
+  max-width: 120px;
+  text-align: center;
+  user-select: none;
+  touch-action: manipulation;
+}
+
+.controlBtn:active {
+  background-color: var(--pixel-white) !important;
+  color: var(--chaos-bg) !important;
+  border-color: var(--pixel-white) !important;
+}
+
+.fireBtn {
+  background-color: rgba(255, 107, 53, 0.15) !important;
+  border-color: var(--neon-orange) !important;
+  color: var(--neon-orange) !important;
+}
+
+.fireBtn:active {
+  background-color: var(--neon-orange) !important;
+  color: var(--text-inverse) !important;
+  border-color: var(--neon-orange) !important;
+  box-shadow: 0 0 15px rgba(255, 107, 53, 0.6) !important;
+}
+
+/* Responsiveness overrides for canvas aspect ratio */
+@media (max-width: 768px) {
+  .title {
+    font-size: 18px;
+  }
+  .subtitle {
+    font-size: 10px;
+  }
+  .arcadeBtn {
+    font-size: 8px !important;
+    padding: var(--chaos-space-3) var(--chaos-space-4) !important;
+  }
+}

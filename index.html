@@ -1,0 +1,482 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="Vinit Atul Majethiya — Personal Portfolio. Built at the intersection of logic, curiosity, and code." />
+
+  <!-- Open Graph -->
+  <meta property="og:title" content="Vinit Atul Majethiya · Portfolio" />
+  <meta property="og:description" content="B.Tech AIML student seeking internships in Data/AI & Dev." />
+  <meta property="og:image" content="./assets/og-image.jpg" />
+  <meta property="og:type" content="website" />
+
+  <!-- Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;1,400&family=DM+Mono:wght@300;400;500&family=Cormorant+Garamond:ital,wght@1,400;1,500;1,600&family=Press+Start+2P&display=swap" rel="stylesheet" />
+
+  <!-- CSS Stylesheets -->
+  <link rel="stylesheet" href="./css/reset.css" />
+  <link rel="stylesheet" href="./css/variables.css" />
+  <link rel="stylesheet" href="./css/base.css" />
+  <link rel="stylesheet" href="./css/layout.css" />
+  <link rel="stylesheet" href="./css/components.css" />
+  <link rel="stylesheet" href="./css/interactive-mockups.css" />
+  <link rel="stylesheet" href="./css/animations.css" />
+  <link rel="stylesheet" href="./css/responsive.css" />
+
+  <link rel="icon" href="./assets/favicon.ico" />
+  <title>Vinit Atul Majethiya · Portfolio</title>
+</head>
+<body class="theme-paper">
+
+  <!-- Custom Cursor Dot (Desktop Only) -->
+  <div class="cursor-dot" aria-hidden="true"></div>
+
+  <!-- ==================== NAVIGATION ==================== -->
+  <header class="nav-wrapper" role="banner">
+    <nav class="nav container" aria-label="Main navigation">
+      <span class="nav-name">Vinit Atul Majethiya</span>
+      
+      <button class="nav-toggle" aria-label="Open menu" aria-expanded="false">
+        <span></span><span></span>
+      </button>
+
+      <ul class="nav-links" role="list">
+        <li><a href="#about">About</a></li>
+        <li><a href="#projects">Projects</a></li>
+        <li><a href="#human">Off The Clock</a></li>
+        <li><a href="#contact">Contact</a></li>
+      </ul>
+
+      <div class="nav-actions">
+        <!-- Dual Frequency Theme Dial -->
+        <div class="theme-dial-container" title="Switch between Paper & Noir modes">
+          <span class="theme-dial-label">PAPER</span>
+          <button class="theme-dial-track" id="themeDial" aria-label="Toggle visual frequency">
+            <span class="theme-dial-knob"></span>
+          </button>
+          <span class="theme-dial-label">NOIR</span>
+        </div>
+        <a href="#contact" class="nav-cta btn-primary">Get In Touch</a>
+      </div>
+    </nav>
+  </header>
+
+  <main>
+
+    <!-- ==================== HERO ==================== -->
+    <section class="hero" id="hero" aria-label="Introduction">
+      <div class="container hero-container">
+        <div class="hero-content">
+          <p class="hero-eyebrow" data-reveal>Vinit Atul Majethiya</p>
+          <h1 class="hero-headline" data-reveal>
+            <span>Building at the</span>
+            <span>intersection of logic,</span>
+            <span><span class="serif-italic hero-highlight">curiosity</span> , and code<span class="hero-cursor">_</span></span>
+          </h1>
+          <div class="hero-cta" data-reveal>
+            <a href="#projects" class="btn-primary hero-btn">See My Work</a>
+            <button id="chaos-trigger" class="chaos-btn" aria-label="Open Chaos Mode panel">
+              <span class="chaos-btn-bracket">[</span>
+              <span class="chaos-btn-text">INSERT COIN</span>
+              <span class="chaos-btn-bracket">]</span>
+            </button>
+          </div>
+        </div>
+        
+        <!-- Massive Right Watermark Brace -->
+        <div class="hero-watermark-brace" aria-hidden="true">}</div>
+      </div>
+      
+      <!-- Scroll Indicator -->
+      <div class="scroll-indicator" aria-hidden="true">
+        <div class="scroll-line"><div class="scroll-dot"></div></div>
+      </div>
+    </section>
+
+    <!-- ==================== ABOUT & JOURNEY ==================== -->
+    <section class="section" id="about" aria-labelledby="about-heading">
+      <div class="container">
+        <div class="section-label" data-reveal>01 / HISTORY / ABOUT</div>
+        
+        <div class="about-grid">
+          <!-- Column 1: Story -->
+          <div class="about-story" data-reveal>
+            <h2 id="about-heading" class="section-title">The Journey So Far</h2>
+            <p class="lead-text">I operate in the spaces where logic meets human-centric design. My work is driven by the belief that complex systems should not feel complicated. They should feel intuitive.</p>
+            <p>I became interested in machine learning the same way I got into guitar — I heard something that didn't make sense to me, and I couldn't leave it alone until it did. From my first lines of Python to training deep models, my path in tech has been driven by pure curiosity.</p>
+            <p>Currently focused on applied machine learning and interactive interfaces, I'm building tools that augment capability without adding cognitive load.</p>
+          </div>
+
+          <!-- Column 2: Stack Cards -->
+          <div class="about-cards-col" data-reveal>
+            <div class="info-card">
+              <span class="info-card-num">01 |</span>
+              <h3 class="info-card-title">Building With</h3>
+              <p class="info-card-text">Python, PyTorch, React, TypeScript, C++, PostgreSQL, Flask, FastAPI</p>
+            </div>
+            
+            <div class="info-card">
+              <span class="info-card-num">02 |</span>
+              <h3 class="info-card-title">Launching To</h3>
+              <p class="info-card-text">Websites, Web Apps, Chrome Extensions, Cloud APIs, Command Line Tools</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ==================== METADATA STATS GRID ==================== -->
+    <section class="section-stats border-y" aria-label="Professional Metadata">
+      <div class="container stats-grid" data-reveal>
+        <!-- Stat 1: Role -->
+        <div class="stat-card">
+          <div class="stat-icon">
+            <svg viewBox="0 0 24 24" width="20" height="20" stroke="currentColor" stroke-width="1.5" fill="none" stroke-linecap="round" stroke-linejoin="round">
+              <circle cx="12" cy="12" r="10"></circle>
+              <line x1="22" y1="12" x2="18" y2="12"></line>
+              <line x1="6" y1="12" x2="2" y2="12"></line>
+              <line x1="12" y1="6" x2="12" y2="2"></line>
+              <line x1="12" y1="22" x2="12" y2="18"></line>
+            </svg>
+          </div>
+          <h4 class="stat-title">ROLE / STATUS</h4>
+          <p class="stat-value">Intern / Developer</p>
+          <p class="stat-muted">B.Tech AIML · SG University<br>Seeking Data/AI &amp; Dev Internships<br>Available immediately</p>
+        </div>
+
+        <!-- Stat 2: License -->
+        <div class="stat-card">
+          <div class="stat-icon">
+            <svg viewBox="0 0 24 24" width="20" height="20" stroke="currentColor" stroke-width="1.5" fill="none" stroke-linecap="round" stroke-linejoin="round">
+              <rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect>
+              <path d="M7 11V7a5 5 0 0 1 10 0v4"></path>
+            </svg>
+          </div>
+          <h4 class="stat-title">LICENSE / PERMS</h4>
+          <p class="stat-value">Creative Commons 4.0</p>
+          <p class="stat-muted">Attribution-NonCommercial<br>Open source codebases<br>Use as you please</p>
+        </div>
+
+        <!-- Stat 3: Focus -->
+        <div class="stat-card">
+          <div class="stat-icon">
+            <svg viewBox="0 0 24 24" width="20" height="20" stroke="currentColor" stroke-width="1.5" fill="none" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path>
+            </svg>
+          </div>
+          <h4 class="stat-title">FOCUS / INTEREST</h4>
+          <p class="stat-value">ML &amp; Interfaces</p>
+          <p class="stat-muted">Applied neural architectures<br>Interactive system design<br>Human-in-the-loop workflows</p>
+        </div>
+
+        <!-- Stat 4: Visibility -->
+        <div class="stat-card">
+          <div class="stat-icon">
+            <svg viewBox="0 0 24 24" width="20" height="20" stroke="currentColor" stroke-width="1.5" fill="none" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path>
+            </svg>
+          </div>
+          <h4 class="stat-title">VISIBILITY</h4>
+          <p class="stat-value">Open to chat</p>
+          <p class="stat-muted">Ready to build together<br>vinitmajethiya@gmail.com<br>Response in under 24 hours</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- ==================== SELECTED WORK / PROJECTS ==================== -->
+    <section class="section" id="projects" aria-labelledby="projects-heading">
+      <div class="container">
+        <div class="section-label" data-reveal>02 / SELECTED WORK / PROJECTS</div>
+        <h2 class="sr-only" id="projects-heading">Projects</h2>
+        
+        <div class="projects-list">
+
+          <!-- PROJECT 01: MINDORA -->
+          <article class="project-row" data-reveal>
+            <!-- Background number watermark -->
+            <div class="project-watermark">01</div>
+            
+            <div class="project-info">
+              <span class="project-tag">Web App &amp; Healthcare AI</span>
+              <h3 class="project-row-title">Mindora: Triage &amp; Therapy</h3>
+              <p class="project-row-desc">A scalable healthcare portal designed to streamline patient triage using conversational models, integrating real-time health metrics to prioritize clinical emergencies.</p>
+              <p class="project-row-learning">What I learned: Hardened security protocols around health-related biometric data and learned the value of reserving automation for triage while keeping therapy strictly human.</p>
+              
+              <div class="project-row-footer">
+                <div class="tech-tags">
+                  <span>React</span>
+                  <span>Node.js</span>
+                  <span>OpenAI</span>
+                  <span>Google Fit SDK</span>
+                </div>
+                <div class="project-row-links">
+                  <a href="https://github.com/VinitMajethiya" class="btn-ghost btn-sm" target="_blank" rel="noopener">GitHub</a>
+                </div>
+              </div>
+            </div>
+            
+            <!-- Mindora Triage Chat Simulator -->
+            <div class="project-mockup-wrapper" aria-hidden="true">
+              <div class="mockup-frame device-phone">
+                <div class="phone-header">
+                  <span>9:41</span>
+                  <div class="phone-camera"></div>
+                  <span>●●●</span>
+                </div>
+                <div class="phone-screen" id="triageSimulator">
+                  <div class="chat-bubble bot">Hello, I'm Mindora Triage. Please describe your symptoms.</div>
+                </div>
+                <div class="phone-footer"><div class="phone-home-button"></div></div>
+              </div>
+            </div>
+          </article>
+
+          <!-- PROJECT 02: AI RECOMMENDATION MODELS -->
+          <article class="project-row project-row-reverse" data-reveal>
+            <!-- Background number watermark -->
+            <div class="project-watermark">02</div>
+
+            <!-- AI Recommendation Node Graph -->
+            <div class="project-mockup-wrapper" aria-hidden="true">
+              <div class="mockup-frame device-tablet">
+                <div class="tablet-header">
+                  <span>latent-space-viz.py</span>
+                  <div class="tablet-speaker"></div>
+                  <span>RUN ▶</span>
+                </div>
+                <div class="tablet-screen">
+                  <svg id="nodeGraphSvg" width="340" height="210" viewBox="0 0 340 210"></svg>
+                </div>
+              </div>
+            </div>
+
+            <div class="project-info">
+              <span class="project-tag">Data &amp; Machine Learning</span>
+              <h3 class="project-row-title">AI Recommendation Engines</h3>
+              <p class="project-row-desc">Content-based and collaborative filtering models trained on Goodreads and MovieLens datasets, optimized to resolve cold-start problems and map latent vectors.</p>
+              <p class="project-row-learning">What I learned: Solved matrix sparsity bottlenecks using Singular Value Decomposition (SVD) and developed memory-efficient index trees to serve recommendation listings under 100ms.</p>
+              
+              <div class="project-row-footer">
+                <div class="tech-tags">
+                  <span>Python</span>
+                  <span>Scikit-learn</span>
+                  <span>Pandas</span>
+                  <span>Flask</span>
+                </div>
+                <div class="project-row-links">
+                  <a href="https://github.com/VinitMajethiya" class="btn-ghost btn-sm" target="_blank" rel="noopener">GitHub</a>
+                </div>
+              </div>
+            </div>
+          </article>
+
+          <!-- PROJECT 03: VOTERNEXUS -->
+          <article class="project-row" data-reveal>
+            <!-- Background number watermark -->
+            <div class="project-watermark">03</div>
+            
+            <div class="project-info">
+              <span class="project-tag">Civic Web Platform</span>
+              <h3 class="project-row-title">VoterNexus Registration</h3>
+              <p class="project-row-desc">A civic registration portal designed to guide young voters through regional registration requirements, aggregating distributed state civic API indexes into a single dashboard.</p>
+              <p class="project-row-learning">What I learned: Navigated the challenges of structuring external civic API data and designing highly accessible interfaces (WCAG compliant) for a diverse demographic.</p>
+              
+              <div class="project-row-footer">
+                <div class="tech-tags">
+                  <span>HTML5</span>
+                  <span>CSS3</span>
+                  <span>JavaScript</span>
+                  <span>Node.js</span>
+                </div>
+                <div class="project-row-links">
+                  <a href="https://github.com/VinitMajethiya" class="btn-ghost btn-sm" target="_blank" rel="noopener">GitHub</a>
+                </div>
+              </div>
+            </div>
+            
+            <!-- VoterNexus Ballot Simulator -->
+            <div class="project-mockup-wrapper" aria-hidden="true">
+              <div class="mockup-frame device-desktop">
+                <div class="desktop-header">
+                  <div class="desktop-dots"><span></span><span></span><span></span></div>
+                  <div class="desktop-url">voternexus.gov/register</div>
+                </div>
+                <div class="desktop-screen">
+                  <div class="ballot-box-container">
+                    <div class="ballot-slot"></div>
+                    <div class="ballot-card" id="ballotCard">
+                      <div class="ballot-card-header">⚖ OFFICIAL BALLOT</div>
+                      <div class="ballot-card-line">── District 7 · 2024</div>
+                      <div class="ballot-card-line">☑ Candidate A</div>
+                      <div class="ballot-card-line">☐ Candidate B</div>
+                      <div class="ballot-card-action">▼ CLICK TO SUBMIT</div>
+                    </div>
+                    <div class="ballot-box-body">
+                      <span class="ballot-box-seal">🗳</span>
+                    </div>
+                    <div class="ballot-success-message" id="ballotSuccess">
+                      <h4>VOTE RECORDED</h4>
+                      <p>Your registration is confirmed and vote has been securely submitted to the state registry.</p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </article>
+
+        </div>
+      </div>
+    </section>
+
+    <!-- ==================== LEADERSHIP / QUOTE DIVIDER ==================== -->
+    <section class="section-quote" aria-label="Leadership Statement">
+      <div class="quote-watermark" aria-hidden="true">03</div>
+      <div class="container quote-container" data-reveal>
+        <blockquote class="editorial-quote">
+          <p class="quote-part1">"True technical leadership isn't about knowing all the answers.</p>
+          <p class="quote-part2">It's about constructing the right environment where curiosity can systematically solve the right problems."</p>
+          <footer class="quote-author">— Vinit Atul Majethiya</footer>
+        </blockquote>
+      </div>
+    </section>
+
+    <!-- ==================== OFF THE CLOCK / HUMAN SIDE ==================== -->
+    <section class="section section-alt" id="human" aria-labelledby="human-heading">
+      <div class="container">
+        <div class="section-label" data-reveal>03 / PERSONAL / OFF THE CLOCK</div>
+        
+        <div class="human-intro" data-reveal>
+          <h2 id="human-heading" class="section-title">Off The Clock</h2>
+          <p class="lead-text">Memorable portfolios show the person behind the code. Drag, click, and interact with the cards below to see what happens when the IDE is closed.</p>
+        </div>
+
+        <!-- Floating Stack of Interactive Polaroid Cards -->
+        <div class="polaroid-deck" id="polaroidDeck" data-reveal>
+          
+          <!-- Polaroid 1: Music -->
+          <div class="polaroid-card" id="cardMusic" role="button" tabindex="0" aria-label="Music card. Click to synthesize guitar progression.">
+            <div class="polaroid-image-area">
+              <span class="polaroid-svg-icon">♩</span>
+              <div class="guitar-oscillator-waves" id="synthWaveAnim">
+                <span></span><span></span><span></span><span></span>
+              </div>
+            </div>
+            <div class="polaroid-caption">
+              <h3>Guitar Synth</h3>
+              <p>convincing my roommates it sounds intentional. Click me to play a live synthesized guitar arpeggio (Am → G → C → Em) via AudioContext.</p>
+              <div class="polaroid-action-hint">CLICK TO STRUM</div>
+            </div>
+          </div>
+
+          <!-- Polaroid 2: Gaming -->
+          <div class="polaroid-card" id="cardGaming" role="button" tabindex="0" aria-label="Gaming card. Hover to see score tick.">
+            <div class="polaroid-image-area">
+              <span class="polaroid-svg-icon">◈</span>
+              <div class="game-score-ticker" id="gameScoreVal">SCORE: 004200</div>
+            </div>
+            <div class="polaroid-caption">
+              <h3>Story RPGs</h3>
+              <p>games that wreck me emotionally and competitive lobbies. Drag me to clear the deck; hover to activate the arcade score ticker.</p>
+              <div class="polaroid-action-hint">DRAG TO REORDER</div>
+            </div>
+          </div>
+
+          <!-- Polaroid 3: Making -->
+          <div class="polaroid-card" id="cardMaking" role="button" tabindex="0" aria-label="Making card. Click keys.">
+            <div class="polaroid-image-area">
+              <span class="polaroid-svg-icon">⚙</span>
+              <div class="keypad-grid" id="macropadGrid">
+                <span class="key-cap"></span><span class="key-cap"></span><span class="key-cap"></span>
+                <span class="key-cap"></span><span class="key-cap"></span><span class="key-cap"></span>
+              </div>
+            </div>
+            <div class="polaroid-caption">
+              <h3>Junk &amp; Keys</h3>
+              <p>building split macro pads and scrap builds. There's something about crafting hardware with your hands that code can't match.</p>
+              <div class="polaroid-action-hint">CLICK THE KEYCAPS</div>
+            </div>
+          </div>
+
+          <!-- Polaroid 4: Running -->
+          <div class="polaroid-card" id="cardRunning" role="button" tabindex="0" aria-label="Running card. Hover to run.">
+            <div class="polaroid-image-area">
+              <span class="polaroid-svg-icon">▷</span>
+              <div class="runner-track">
+                <div class="runner-sprite" id="runnerSprite">🏃</div>
+              </div>
+            </div>
+            <div class="polaroid-caption">
+              <h3>Hiking &amp; Runs</h3>
+              <p>hitting trails to reset the syntax stack trace. Running clear trails is the one activity that doesn't have an error log.</p>
+              <div class="polaroid-action-hint">HOVER TO RUN</div>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </section>
+
+    <!-- ==================== CONTACT ==================== -->
+    <section class="section" id="contact" aria-labelledby="contact-heading">
+      <div class="container">
+        <div class="section-label" data-reveal>04 / CONNECT / CONTACT</div>
+        
+        <div class="contact-grid">
+          <div class="contact-intro" data-reveal>
+            <h2 id="contact-heading" class="section-title">Let's Talk</h2>
+            <p class="lead-text">If you're building something interesting, need a teammate who won't panic when database branches corrupt at 2 AM, or want to discuss internships — let's connect.</p>
+            <p class="contact-guarantee">I check my inbox daily and will respond within 24 hours.</p>
+          </div>
+          
+          <div class="contact-channels" data-reveal>
+            <a href="mailto:vinitmajethiya@gmail.com" class="contact-link-row">
+              <span class="contact-link-label">Email</span>
+              <span class="contact-link-value">vinitmajethiya@gmail.com</span>
+            </a>
+            
+            <a href="https://www.linkedin.com/in/vinitmajethiya/" class="contact-link-row" target="_blank" rel="noopener">
+              <span class="contact-link-label">LinkedIn</span>
+              <span class="contact-link-value">/in/vinitmajethiya</span>
+            </a>
+            
+            <a href="https://github.com/VinitMajethiya" class="contact-link-row" target="_blank" rel="noopener">
+              <span class="contact-link-label">GitHub</span>
+              <span class="contact-link-value">/VinitMajethiya</span>
+            </a>
+          </div>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- ==================== FOOTER ==================== -->
+  <footer class="footer" role="contentinfo">
+    <div class="container footer-container">
+      <p class="footer-text">Built by Vinit Atul Majethiya · 2026 · No templates were harmed in the making of this site.</p>
+    </div>
+  </footer>
+
+  <!-- EASTER EGG OVERLAY (Konami code response) -->
+  <div class="easter-egg" id="easterEgg" role="dialog" aria-modal="true" aria-label="Hidden message" style="display: none;" hidden>
+    <div class="easter-egg-box">
+      <pre class="easter-egg-text" id="easterEggText"></pre>
+      <button class="btn-ghost" id="easterEggClose">[ close ]</button>
+    </div>
+  </div>
+
+  <!-- CHAOS MODE ANCHOR ACTION BUTTON -->
+  <div id="chaos-root"></div>
+
+  <!-- Javascript Modules -->
+  <script src="./js/scroll.js" defer></script>
+  <script src="./js/nav.js" defer></script>
+  <script src="./js/easter-egg.js" defer></script>
+  <script src="./js/polaroid-drag.js" defer></script>
+  <script src="./js/main.js" defer></script>
+
+</body>
+</html>

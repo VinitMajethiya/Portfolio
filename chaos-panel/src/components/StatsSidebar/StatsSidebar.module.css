@@ -1,0 +1,83 @@
+/* StatsSidebar.module.css — CSS module for Stats Sidebar */
+
+.sidebar {
+  padding: var(--chaos-space-6);
+  font-family: var(--font-ui);
+  display: flex;
+  flex-direction: column;
+  gap: var(--chaos-space-6);
+  background-color: var(--chaos-surface);
+  height: 100%;
+}
+
+.section {
+  display: flex;
+  flex-direction: column;
+  gap: var(--chaos-space-2);
+}
+
+.playerTitle {
+  font-family: var(--font-display);
+  font-size: var(--text-base);
+  font-weight: 900;
+  color: var(--pixel-gold);
+  letter-spacing: 0.05em;
+  text-shadow: 0 0 8px rgba(255, 215, 0, 0.3);
+}
+
+.sectionTitle {
+  font-family: var(--font-display);
+  font-size: var(--text-sm);
+  font-weight: 700;
+  color: var(--pixel-white);
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+}
+
+.divider {
+  height: 2px;
+  background-color: var(--pixel-grid);
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: 110px 1fr;
+  row-gap: var(--chaos-space-2);
+  column-gap: var(--chaos-space-2);
+  font-size: var(--text-sm);
+}
+
+.label {
+  color: var(--pixel-muted);
+  text-transform: uppercase;
+  font-weight: 700;
+}
+
+.value {
+  color: var(--pixel-white);
+}
+
+.missionText {
+  font-family: var(--font-pixel);
+  font-size: var(--text-xs);
+  color: var(--neon-orange);
+  text-shadow: 0 0 8px rgba(255, 107, 53, 0.4);
+  animation: missionPulse 2s ease-in-out infinite;
+}
+
+@keyframes missionPulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.7; }
+}
+
+.timeValue {
+  font-family: var(--font-pixel);
+  font-size: 16px;
+  color: var(--neon-green);
+  text-shadow: 0 0 10px rgba(57, 255, 20, 0.4);
+}
+
+.dateValue {
+  font-size: var(--text-xs);
+  color: var(--pixel-muted);
+}
