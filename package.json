@@ -1,0 +1,9 @@
+{
+  "name": "vinit-majethiya-portfolio",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Vinit Majethiya - AI/ML Engineer Portfolio",
+  "scripts": {
+    "build": "echo 'Static portfolio ready for deployment'"
+  }
+}

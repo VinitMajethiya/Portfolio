@@ -1,4 +1,6 @@
 {
+  "buildCommand": "echo 'Static portfolio ready for deployment'",
+  "outputDirectory": ".",
   "rewrites": [
     { "source": "/api/(.*)", "destination": "/api/$1" },
     { "source": "/chaos/(.*)", "destination": "/chaos/$1" },
