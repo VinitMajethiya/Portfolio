@@ -1,55 +1,165 @@
-/* chaos-animations.css — Animations for Chaos Mode */
+/* chaos-animations.css — Electric Noir animation library */
 
-/* Neon glows */
-.glow-orange:hover {
-  border-color: var(--neon-orange) !important;
-  box-shadow: 0 0 15px rgba(255, 107, 53, 0.6) !important;
+/* ════════════════════════════════════════════════
+   OVERLAY ENTRY
+   ════════════════════════════════════════════════ */
+@keyframes chaosEnter {
+  from {
+    opacity: 0;
+    transform: scale(1.01);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
 }
 
-.glow-cyan:hover {
-  border-color: var(--neon-cyan) !important;
-  box-shadow: 0 0 15px rgba(0, 245, 255, 0.6) !important;
+.chaos-overlay-container {
+  animation: chaosEnter 0.35s cubic-bezier(0.16, 1, 0.3, 1) forwards;
 }
 
-.glow-pink:hover {
-  border-color: var(--neon-pink) !important;
-  box-shadow: 0 0 15px rgba(255, 45, 120, 0.6) !important;
+/* ════════════════════════════════════════════════
+   CONTENT PANE — tab switch fade+slide
+   ════════════════════════════════════════════════ */
+@keyframes contentFadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(6px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
-.glow-green:hover {
-  border-color: var(--neon-green) !important;
-  box-shadow: 0 0 15px rgba(57, 255, 20, 0.6) !important;
+/* ════════════════════════════════════════════════
+   LIVE PULSE — header indicator dot
+   ════════════════════════════════════════════════ */
+@keyframes liveBlip {
+  0%, 100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 0.5;
+    transform: scale(0.7);
+  }
 }
 
-/* Pulsing outline keyframes */
-@keyframes neon-pulse-orange {
-  0%, 100% { box-shadow: 0 0 8px rgba(255, 107, 53, 0.4); }
-  50% { box-shadow: 0 0 18px rgba(255, 107, 53, 0.8); }
+/* ════════════════════════════════════════════════
+   SCANLINE FLICKER — very subtle, keeps CRT feel
+   ════════════════════════════════════════════════ */
+@keyframes scanlineFlicker {
+  0%, 100% { opacity: 0.6; }
+  25%       { opacity: 0.55; }
+  50%       { opacity: 0.65; }
+  75%       { opacity: 0.58; }
 }
 
-.pulse-glow-orange {
-  animation: neon-pulse-orange 2s ease-in-out infinite;
+/* ════════════════════════════════════════════════
+   TERMINAL BLINK — footer insert coin text
+   ════════════════════════════════════════════════ */
+@keyframes terminalBlink {
+  0%, 100% { opacity: 1; }
+  49%       { opacity: 1; }
+  50%       { opacity: 0; }
+  99%       { opacity: 0; }
 }
 
-/* Progress bar loader animation */
-@keyframes loader-progress {
-  0% { width: 0%; }
-  50% { width: 70%; }
-  100% { width: 100%; }
+/* ════════════════════════════════════════════════
+   NEON PULSE — pulsing glow on active elements
+   ════════════════════════════════════════════════ */
+@keyframes neonPulse {
+  0%, 100% {
+    box-shadow: 0 0 6px var(--tab-glow), 0 0 12px var(--tab-glow-soft);
+  }
+  50% {
+    box-shadow: 0 0 12px var(--tab-glow), 0 0 24px var(--tab-glow-soft), 0 0 40px var(--tab-glow-xs);
+  }
 }
 
-.progress-fill {
-  height: 100%;
-  animation: loader-progress 2s cubic-bezier(0.1, 0.85, 0.25, 1) infinite;
+.neon-pulse {
+  animation: neonPulse 2.5s ease-in-out infinite;
 }
 
-/* Retro arcade scanline flicker */
-@keyframes scanline-flicker {
-  0% { opacity: 0.75; }
-  50% { opacity: 0.72; }
-  100% { opacity: 0.75; }
+/* ════════════════════════════════════════════════
+   PROGRESS BAR — sidebar vitals fill
+   ════════════════════════════════════════════════ */
+@keyframes progressFill {
+  from { width: 0; }
 }
 
-.chaos-overlay-container::after {
-  animation: scanline-flicker 0.15s infinite;
+/* ════════════════════════════════════════════════
+   TERMINAL CARET
+   ════════════════════════════════════════════════ */
+@keyframes caretBlink {
+  0%, 100% { opacity: 1; }
+  50%       { opacity: 0; }
+}
+
+.term-caret::after {
+  content: '▋';
+  display: inline-block;
+  animation: caretBlink 1s step-end infinite;
+  margin-left: 2px;
+  font-size: 0.8em;
+}
+
+/* ════════════════════════════════════════════════
+   STAT COUNTER — number tick-up on mount
+   ════════════════════════════════════════════════ */
+@keyframes statReveal {
+  from {
+    opacity: 0;
+    transform: translateY(4px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* ════════════════════════════════════════════════
+   GLASS SHIMMER — sidebar section reveal
+   ════════════════════════════════════════════════ */
+@keyframes glassReveal {
+  from {
+    opacity: 0;
+    transform: translateX(8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+/* ════════════════════════════════════════════════
+   HOVER GLOW UTILITIES
+   ════════════════════════════════════════════════ */
+.glow-on-hover {
+  transition: box-shadow 0.2s ease, border-color 0.2s ease;
+}
+
+.glow-on-hover:hover {
+  box-shadow: 0 0 12px var(--tab-glow);
+  border-color: var(--tab-accent) !important;
+}
+
+/* ════════════════════════════════════════════════
+   PLACEHOLDER PANE — center icon float
+   ════════════════════════════════════════════════ */
+@keyframes iconFloat {
+  0%, 100% { transform: translateY(0); }
+  50%       { transform: translateY(-8px); }
+}
+
+@keyframes paneReveal {
+  from {
+    opacity: 0;
+    transform: scale(0.97);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
 }

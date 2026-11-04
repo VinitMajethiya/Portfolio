@@ -1,119 +1,186 @@
 import React, { useState, useEffect } from 'react';
 import styles from './StatsSidebar.module.css';
 
+const TAB_META = {
+  shooter: {
+    mission: 'BUG INVADERS',
+    missionSub: 'Eliminate all bugs',
+    accent: '#FF5722',
+    vitals: [
+      { label: 'AIM',    value: 94, unit: '%' },
+      { label: 'REFLEX', value: 82, unit: '%' },
+      { label: 'AMMO',   value: 67, unit: '%' },
+    ],
+  },
+  guitar: {
+    mission: 'GUITAR LAB',
+    missionSub: 'Compose something wild',
+    accent: '#00E5FF',
+    vitals: [
+      { label: 'TUNING',    value: 100, unit: '%' },
+      { label: 'VIBE',      value: 87,  unit: '%' },
+      { label: 'DISTORTION',value: 42,  unit: '%' },
+    ],
+  },
+  books: {
+    mission: 'BOOK MOOD',
+    missionSub: 'Decode the narrative',
+    accent: '#D500F9',
+    vitals: [
+      { label: 'TENSION',   value: 87, unit: '%' },
+      { label: 'PLOT HOLES',value: 12, unit: '%' },
+      { label: 'IMMERSION', value: 96, unit: '%' },
+    ],
+  },
+  junk: {
+    mission: 'JUNK LAB',
+    missionSub: 'Build something broken',
+    accent: '#76FF03',
+    vitals: [
+      { label: 'CHAOS',    value: 100, unit: '%' },
+      { label: 'COFFEE',   value: 43,  unit: '%' },
+      { label: 'ENTROPY',  value: 78,  unit: '%' },
+    ],
+  },
+};
+
+const SYSTEM_STATS = [
+  { label: 'STACK',   value: 'REACT+VITE' },
+  { label: 'VIBES',   value: 'MAXIMUM' },
+  { label: 'COFFEE',  value: 'NEEDED' },
+  { label: 'STATUS',  value: 'SEEKING INT' },
+];
+
 export default function StatsSidebar({ activeTab }) {
-  const [time, setTime] = useState(new Date());
+  const [time, setTime]     = useState(new Date());
   const [hiScore, setHiScore] = useState(0);
+  const [vitalKey, setVitalKey] = useState(0); // re-trigger bar animation on tab change
 
-  // Update clock every second
+  /* ─── Live clock ─── */
   useEffect(() => {
-    const timer = setInterval(() => {
-      setTime(new Date());
-    }, 1000);
-
+    const timer = setInterval(() => setTime(new Date()), 1000);
     return () => clearInterval(timer);
   }, []);
 
-  // Update high score reactively
+  /* ─── Hi-score from localStorage ─── */
   useEffect(() => {
-    const updateHighScore = () => {
-      const score = parseInt(localStorage.getItem('chaos_hi_score') || '0', 10);
-      setHiScore(score);
+    const update = () => {
+      setHiScore(parseInt(localStorage.getItem('chaos_hi_score') || '0', 10));
     };
-
-    updateHighScore();
-    
-    // Listen for high score updates (e.g., custom score update events or check on interval)
-    const interval = setInterval(updateHighScore, 1000);
+    update();
+    const interval = setInterval(update, 2000);
     return () => clearInterval(interval);
   }, []);
 
-  const getMissionName = () => {
-    switch (activeTab) {
-      case 'shooter': return 'BUG INVADERS';
-      case 'guitar': return 'GUITAR LAB';
-      case 'books': return 'BOOK MOOD';
-      case 'junk': return 'JUNK LAB';
-      default: return 'SYSTEM COMPILING';
-    }
-  };
+  /* ─── Retrigger vital bar animations on tab change ─── */
+  useEffect(() => {
+    setVitalKey(k => k + 1);
+  }, [activeTab]);
 
-  const getDayName = () => {
-    const days = ['SUNDAY', 'MONDAY', 'TUESDAY', 'WEDNESDAY', 'THURSDAY', 'FRIDAY', 'SATURDAY'];
-    return days[time.getDay()];
-  };
+  const meta = TAB_META[activeTab] || TAB_META.shooter;
 
-  const formatDate = () => {
-    const months = ['JAN', 'FEB', 'MAR', 'APR', 'MAY', 'JUN', 'JUL', 'AUG', 'SEP', 'OCT', 'NOV', 'DEC'];
-    return `${time.getDate().toString().padStart(2, '0')} ${months[time.getMonth()]} ${time.getFullYear()}`;
-  };
+  const pad2  = (n) => String(n).padStart(2, '0');
+  const months = ['JAN','FEB','MAR','APR','MAY','JUN','JUL','AUG','SEP','OCT','NOV','DEC'];
+  const days   = ['SUN','MON','TUE','WED','THU','FRI','SAT'];
 
   return (
-    <aside className={styles.sidebar} aria-label="System Stats">
-      {/* Player Bio */}
-      <section className={styles.section}>
-        <div className={styles.playerTitle}>PLAYER: VINIT.EXE</div>
-        <div className={styles.divider} />
-        <div className={styles.grid}>
-          <span className={styles.label}>HI-SCORE</span>
-          <span className={styles.value}>{hiScore.toString().padStart(6, '0')}</span>
-          <span className={styles.label}>LEVEL</span>
-          <span className={styles.value}>FINAL YR</span>
-          <span className={styles.label}>STATUS</span>
-          <span className={styles.value}>SEEKING INT</span>
+    <aside className={styles.sidebar} aria-label="System stats sidebar">
+
+      {/* ─── Player header ─── */}
+      <section className={styles.playerHeader}>
+        <div className={styles.playerAvatarRing} aria-hidden="true">
+          <span className={styles.playerAvatarInner}>V</span>
+        </div>
+        <div>
+          <div className={styles.playerName}>VINIT.EXE</div>
+          <div className={styles.playerRank}>FINAL YEAR · SEEKER</div>
         </div>
       </section>
 
-      {/* Mission */}
+      {/* ─── Hi-score ─── */}
       <section className={styles.section}>
-        <div className={styles.sectionTitle}>CURRENT MISSION</div>
-        <div className={styles.divider} />
-        <div className={styles.missionText}>{getMissionName()}</div>
-      </section>
-
-      {/* Vitals */}
-      <section className={styles.section}>
-        <div className={styles.sectionTitle}>VINIT'S VITALS</div>
-        <div className={styles.divider} />
-        <div className={styles.grid}>
-          <span className={styles.label}>GUITAR</span>
-          <span className={styles.value}>♩ MEDITATIVE</span>
-          <span className={styles.label}>BOOKS</span>
-          <span className={styles.value}>87% TENSION</span>
-          <span className={styles.label}>CRAFT</span>
-          <span className={styles.value}>ACTIVE</span>
-          <span className={styles.label}>GAMES</span>
-          <span className={styles.value}>RANKED</span>
+        <div className={styles.sectionLabel}>HI-SCORE</div>
+        <div className={styles.hiScore} aria-live="polite">
+          {hiScore.toString().padStart(8, '0')}
         </div>
       </section>
 
-      {/* Live Time */}
+      <div className={styles.divider} />
+
+      {/* ─── Live Clock ─── */}
       <section className={styles.section}>
-        <div className={styles.sectionTitle}>NOW PLAYING</div>
-        <div className={styles.divider} />
-        <div className={styles.timeValue}>
-          {time.getHours().toString().padStart(2, '0')}:
-          {time.getMinutes().toString().padStart(2, '0')}:
-          {time.getSeconds().toString().padStart(2, '0')}
+        <div className={styles.sectionLabel}>SYS CLOCK</div>
+        <div className={styles.clock} aria-live="polite">
+          <span className={styles.clockHH}>{pad2(time.getHours())}</span>
+          <span className={styles.clockSep}>:</span>
+          <span className={styles.clockMM}>{pad2(time.getMinutes())}</span>
+          <span className={styles.clockSep}>:</span>
+          <span className={styles.clockSS}>{pad2(time.getSeconds())}</span>
         </div>
-        <div className={styles.dateValue}>
-          {getDayName()} · {formatDate()}
+        <div className={styles.clockDate}>
+          {days[time.getDay()]} · {pad2(time.getDate())} {months[time.getMonth()]} {time.getFullYear()}
         </div>
       </section>
 
-      {/* System Flags */}
+      <div className={styles.divider} />
+
+      {/* ─── Current mission ─── */}
       <section className={styles.section}>
-        <div className={styles.sectionTitle}>SYSTEM</div>
-        <div className={styles.divider} />
-        <div className={styles.grid}>
-          <span className={styles.label}>STACK</span>
-          <span className={styles.value}>REACT+VITE</span>
-          <span className={styles.label}>VIBES</span>
-          <span className={styles.value}>MAXIMUM</span>
-          <span className={styles.label}>COFFEE</span>
-          <span className={styles.value}>NEEDED</span>
+        <div className={styles.sectionLabel}>CURRENT MISSION</div>
+        <div className={styles.missionBadge} style={{ '--mission-color': meta.accent }}>
+          {meta.mission}
+        </div>
+        <div className={styles.missionSub}>{meta.missionSub}</div>
+      </section>
+
+      <div className={styles.divider} />
+
+      {/* ─── Vitals / progress bars ─── */}
+      <section className={styles.section} key={vitalKey}>
+        <div className={styles.sectionLabel}>VITALS</div>
+        <div className={styles.vitals}>
+          {meta.vitals.map(v => (
+            <div key={v.label} className={styles.vitalRow}>
+              <div className={styles.vitalTop}>
+                <span className={styles.vitalLabel}>{v.label}</span>
+                <span className={styles.vitalValue} style={{ color: meta.accent }}>
+                  {v.value}{v.unit}
+                </span>
+              </div>
+              <div className={styles.progressTrack}>
+                <div
+                  className={styles.progressFill}
+                  style={{
+                    '--fill-width': `${v.value}%`,
+                    '--bar-color': meta.accent,
+                  }}
+                />
+              </div>
+            </div>
+          ))}
         </div>
       </section>
+
+      <div className={styles.divider} />
+
+      {/* ─── System stats grid ─── */}
+      <section className={styles.section}>
+        <div className={styles.sectionLabel}>SYS_INFO</div>
+        <div className={styles.statGrid}>
+          {SYSTEM_STATS.map(s => (
+            <React.Fragment key={s.label}>
+              <span className={styles.statKey}>{s.label}</span>
+              <span className={styles.statVal}>{s.value}</span>
+            </React.Fragment>
+          ))}
+        </div>
+      </section>
+
+      {/* ─── Footer stamp ─── */}
+      <div className={styles.sidebarFooter}>
+        <span className={styles.buildStamp}>BUILD v2.0 · 2025</span>
+      </div>
+
     </aside>
   );
 }

@@ -1,235 +1,513 @@
-/* chaos-base.css — Base rules and layouts for Chaos Panel */
+/* chaos-base.css — Bootleg Arcade Cabinet layout system */
 
-@import url('https://fonts.googleapis.com/css2?family=Press+Start+2P&family=Space+Mono:wght@400;700&family=Orbitron:wght@400;700;900&display=swap');
+/* ════════ RESET ════════ */
+*, *::before, *::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
 
-/* Main Overlay Container */
+/* ════════════════════════════════════════════════
+   ROOT OVERLAY CONTAINER
+   ════════════════════════════════════════════════ */
 .chaos-overlay-container {
   position: fixed;
   inset: 0;
   background-color: var(--chaos-bg);
-  color: var(--pixel-white);
-  font-family: var(--font-ui);
+  color: var(--chaos-text-primary);
+  font-family: var(--font-mono);
+  font-size: var(--text-sm);
   z-index: 9999;
   display: flex;
   flex-direction: column;
   overflow: hidden;
-  image-rendering: pixelated;
+
+  /* Smooth tab-accent color transitions */
+  --tab-accent:    #FF5722;
+  --tab-glow:      rgba(255, 87, 34, 0.40);
+  --tab-glow-soft: rgba(255, 87, 34, 0.10);
+  --tab-glow-xs:   rgba(255, 87, 34, 0.05);
+  transition: --tab-accent 0.4s ease;
 }
 
-/* Dot Grid Background Overlay */
+/* ─── ANIMATED DRIFTING SCANLINES (Step 2) ─── */
 .chaos-overlay-container::before {
   content: '';
   position: absolute;
   inset: 0;
-  background-image: radial-gradient(var(--pixel-grid) 1px, transparent 1px);
-  background-size: 20px 20px;
+  background-image: repeating-linear-gradient(
+    0deg,
+    rgba(255, 255, 255, 0.018) 0px,
+    rgba(255, 255, 255, 0.018) 1px,
+    transparent 1px,
+    transparent 4px
+  );
+  animation: scanlineDrift 14s linear infinite;
   pointer-events: none;
-  z-index: 1;
+  z-index: 0;
 }
 
-/* CRT Scanline Overlay */
+/* ─── CHROMATIC ABERRATION + VIGNETTE (Step 2) ─── */
 .chaos-overlay-container::after {
   content: '';
   position: absolute;
   inset: 0;
-  background: linear-gradient(
-    rgba(18, 16, 16, 0) 50%, 
-    rgba(0, 0, 0, 0.25) 50%
-  ), linear-gradient(
-    90deg,
-    rgba(255, 0, 0, 0.06),
-    rgba(0, 255, 0, 0.02),
-    rgba(0, 0, 255, 0.06)
-  );
-  background-size: 100% 4px, 6px 100%;
+  background:
+    /* left edge red bleed */
+    linear-gradient(90deg, rgba(255, 0, 30, 0.028) 0px, transparent 70px),
+    /* right edge blue bleed */
+    linear-gradient(270deg, rgba(0, 20, 255, 0.028) 0px, transparent 70px),
+    /* top edge subtle brightening */
+    linear-gradient(180deg, rgba(255, 255, 255, 0.012) 0px, transparent 80px),
+    /* bottom corner vignette */
+    radial-gradient(ellipse 100% 55% at 50% 100%, rgba(0, 0, 0, 0.55) 0%, transparent 70%);
   pointer-events: none;
-  z-index: 99999;
-  opacity: 0.75;
+  z-index: 99998;
 }
 
-/* Pixel Border Utility (Stepped corners) */
-.pixel-border {
-  border: 4px solid var(--pixel-white);
+/* ─── Vignette corner darkness ─── */
+.chaos-vignette {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  z-index: 1;
+  background: radial-gradient(
+    ellipse 110% 110% at 50% 50%,
+    transparent 40%,
+    rgba(0, 0, 0, 0.75) 100%
+  );
+}
+
+/* ─── HUD CORNER BRACKETS (Step 6 — tactical frame) ─── */
+.chaos-overlay-container .chaos-viewport {
   position: relative;
 }
 
-.pixel-border::before {
-  content: '';
-  position: absolute;
-  top: -4px;
-  left: -4px;
-  right: -4px;
-  bottom: -4px;
-  border: 4px solid var(--chaos-bg);
-  pointer-events: none;
-  z-index: -1;
-}
-
-/* Input / Button Reset */
-.chaos-overlay-container button,
-.chaos-overlay-container input,
-.chaos-overlay-container textarea {
-  font-family: var(--font-ui);
-  background: transparent;
-  color: var(--pixel-white);
-  border: 2px solid var(--pixel-muted);
-  padding: var(--chaos-space-2) var(--chaos-space-3);
-  font-size: var(--text-sm);
-  outline: none;
-  transition: all 0.2s ease;
-}
-
-.chaos-overlay-container button {
-  cursor: pointer;
-  text-transform: uppercase;
-}
-
-.chaos-overlay-container button:hover {
-  border-color: var(--pixel-white);
-  box-shadow: 0 0 10px rgba(232, 232, 240, 0.3);
-}
-
-.chaos-overlay-container textarea:focus,
-.chaos-overlay-container input:focus {
-  border-color: var(--neon-cyan);
-  box-shadow: 0 0 8px rgba(0, 245, 255, 0.2);
-}
-
-/* Blinking text */
-.blink-text {
-  animation: chaos-blink 1s step-end infinite;
-}
-
-@keyframes chaos-blink {
-  50% { opacity: 0; }
-}
-
-/* === LAYOUT ELEMENTS === */
+/* ════════════════════════════════════════════════
+   HEADER — SYSTEM BOOT BAR (Step 3)
+   ════════════════════════════════════════════════ */
 .chaos-header {
-  height: 60px;
+  position: relative;
+  height: 64px;
+  flex-shrink: 0;
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 0 var(--chaos-space-6);
-  border-bottom: 4px solid var(--pixel-white);
-  font-family: var(--font-display);
-  font-weight: 900;
-  letter-spacing: 0.1em;
-  font-size: var(--text-base);
-  background-color: var(--chaos-bg);
-  z-index: 10;
-}
-
-.chaos-exit-btn {
-  font-family: var(--font-pixel) !important;
-  font-size: 10px !important;
-  color: var(--neon-orange) !important;
-  border-color: var(--neon-orange) !important;
-  padding: var(--chaos-space-2) var(--chaos-space-4) !important;
-}
-
-.chaos-exit-btn:hover {
-  background-color: var(--neon-orange) !important;
-  color: var(--text-inverse) !important;
-  box-shadow: 0 0 15px rgba(255, 107, 53, 0.6) !important;
-}
-
-.chaos-tabs-wrapper {
+  padding: 0 var(--space-8);
   background-color: var(--chaos-surface);
-  border-bottom: 4px solid var(--pixel-white);
-  z-index: 10;
+  border-bottom: 1px solid var(--chaos-border-subtle);
+  z-index: 100;
+  /* Thick 3px accent line + deep glow (Step 3) */
+  box-shadow:
+    0 3px 0 var(--tab-accent),
+    0 4px 30px var(--tab-glow-soft),
+    0 4px 60px var(--tab-glow-xs),
+    inset 0 -1px 0 var(--chaos-border-medium);
+  transition: box-shadow 0.5s ease;
+  overflow: hidden;
+}
+
+/* Boot sweep animation on header (Step 3) */
+.chaos-header::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    90deg,
+    transparent 0%,
+    rgba(255, 255, 255, 0.04) 50%,
+    transparent 100%
+  );
+  transform: translateX(-100%);
+  animation: headerSweep 4s cubic-bezier(0.4, 0, 0.2, 1) infinite;
+  pointer-events: none;
+}
+
+@keyframes headerSweep {
+  0%   { transform: translateX(-100%); }
+  40%  { transform: translateX(100%); }
+  100% { transform: translateX(100%); }
+}
+
+.chaos-header-left {
+  display: flex;
+  align-items: center;
+  gap: var(--space-4);
+}
+
+.chaos-header-pulse {
+  width: 9px;
+  height: 9px;
+  border-radius: 50%;
+  background-color: var(--tab-accent);
+  box-shadow:
+    0 0 6px var(--tab-glow),
+    0 0 14px var(--tab-glow-soft);
+  animation: liveBlip 1.8s ease-in-out infinite;
+  flex-shrink: 0;
+  transition: background-color 0.5s ease, box-shadow 0.5s ease;
+}
+
+/* PIXEL FONT title — fully commits to arcade (Step 3) */
+.chaos-header-title {
+  font-family: var(--font-pixel);
+  font-size: 11px;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: var(--chaos-text-primary);
+  text-shadow: 0 0 10px rgba(255, 255, 255, 0.25);
+  line-height: 1;
+}
+
+/* Status sub-line with flicker (Step 3) */
+.chaos-header-sub {
+  font-family: var(--font-mono);
+  font-size: 9px;
+  color: var(--tab-accent);
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  text-shadow:
+    0 0 10px var(--tab-glow),
+    0 0 20px var(--tab-glow-soft);
+  transition: color 0.5s ease, text-shadow 0.5s ease;
+  animation: statusFlicker 7s ease-in-out infinite;
+  margin-top: 4px;
+}
+
+@keyframes statusFlicker {
+  0%, 88%, 100% { opacity: 1; }
+  90%            { opacity: 0.35; }
+  92%            { opacity: 1; }
+  94%            { opacity: 0.6; }
+  96%            { opacity: 1; }
+}
+
+.chaos-header-right {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+}
+
+/* ─── HEADER BUTTONS ─── */
+.chaos-btn {
+  font-family: var(--font-mono);
+  font-size: var(--text-xs);
+  font-weight: 500;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  padding: 0.4rem 1rem;
+  border: 1px solid var(--chaos-border-medium);
+  border-radius: 2px;
+  background: transparent;
+  color: var(--chaos-text-secondary);
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.chaos-btn:hover {
+  border-color: var(--chaos-text-primary);
+  color: var(--chaos-text-primary);
+  box-shadow: 0 0 8px rgba(255, 255, 255, 0.08);
+  transform: translateY(-1px);
+}
+
+.chaos-btn-exit {
+  border-color: var(--tab-accent);
+  color: var(--tab-accent);
+  transition: all 0.15s ease, border-color 0.5s ease, color 0.5s ease;
+  box-shadow: 0 0 8px var(--tab-glow-soft);
+}
+
+.chaos-btn-exit:hover {
+  background-color: var(--tab-accent);
+  color: var(--chaos-bg);
+  box-shadow:
+    0 0 16px var(--tab-glow),
+    0 0 32px var(--tab-glow-soft);
+  transform: translateY(-1px);
+}
+
+/* ════════════════════════════════════════════════
+   TAB BAR — KEY-CAP BUTTONS (Step 4)
+   ════════════════════════════════════════════════ */
+.chaos-tabs-wrapper {
+  flex-shrink: 0;
+  background-color: var(--chaos-surface);
+  border-bottom: 1px solid var(--chaos-border-subtle);
+  z-index: 90;
 }
 
 .chaos-tabs {
   display: flex;
   overflow-x: auto;
-  gap: var(--chaos-space-2);
-  padding: var(--chaos-space-2) var(--chaos-space-4) 0 var(--chaos-space-4);
+  scrollbar-width: none;
+  padding: var(--space-2) var(--space-4);
+  gap: var(--space-2);
 }
 
+.chaos-tabs::-webkit-scrollbar {
+  display: none;
+}
+
+/* KEY-CAP style tabs (Step 4) */
 .chaos-tab {
-  font-family: var(--font-pixel) !important;
-  font-size: 9px !important;
-  padding: var(--chaos-space-3) var(--chaos-space-6) !important;
-  border: 4px solid var(--pixel-muted) !important;
-  border-bottom: none !important;
-  background-color: var(--chaos-bg) !important;
-  color: var(--pixel-muted) !important;
-  position: relative;
-  top: 4px;
+  font-family: var(--font-mono);
+  font-size: var(--text-xs);
+  font-weight: 500;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  padding: var(--space-2) var(--space-5);
+  border: 1px solid var(--chaos-border-subtle);
+  border-radius: 3px;
+  background: rgba(255, 255, 255, 0.025);
+  color: var(--chaos-text-muted);
+  cursor: pointer;
+  white-space: nowrap;
   display: flex;
   align-items: center;
-  gap: var(--chaos-space-2);
+  gap: var(--space-2);
+  position: relative;
+  transition: all 0.15s ease;
+  box-shadow: 0 3px 0 rgba(0, 0, 0, 0.5);
 }
 
 .chaos-tab:hover {
-  color: var(--pixel-white) !important;
+  color: var(--chaos-text-secondary);
+  border-color: var(--chaos-border-medium);
+  background: rgba(255, 255, 255, 0.05);
+  transform: translateY(-2px);
+  box-shadow: 0 5px 0 rgba(0, 0, 0, 0.5);
 }
 
+/* Active tab: glowing key pressed down */
 .chaos-tab.active {
-  color: var(--pixel-white) !important;
-  background-color: var(--chaos-bg) !important;
-  top: 0;
-  padding-bottom: calc(var(--chaos-space-3) + 4px) !important;
+  transform: translateY(1px);
+  box-shadow: 0 1px 0 rgba(0, 0, 0, 0.5);
+  color: var(--tab-accent);
+  border-color: var(--tab-accent);
+  background: var(--tab-glow-xs);
+  box-shadow:
+    0 1px 0 rgba(0, 0, 0, 0.5),
+    0 0 14px var(--tab-glow-soft),
+    inset 0 1px 0 rgba(255, 255, 255, 0.06);
 }
 
-.chaos-tab.active-orange { border-color: var(--neon-orange) !important; }
-.chaos-tab.active-cyan { border-color: var(--neon-cyan) !important; }
-.chaos-tab.active-pink { border-color: var(--neon-pink) !important; }
-.chaos-tab.active-green { border-color: var(--neon-green) !important; }
+/* Per-tab active colors — icon glow */
+.chaos-tab[data-for="shooter"].active .chaos-tab-icon { filter: drop-shadow(0 0 6px #FF5722); }
+.chaos-tab[data-for="guitar"].active  .chaos-tab-icon { filter: drop-shadow(0 0 6px #00E5FF); }
+.chaos-tab[data-for="books"].active   .chaos-tab-icon { filter: drop-shadow(0 0 6px #D500F9); }
+.chaos-tab[data-for="junk"].active    .chaos-tab-icon { filter: drop-shadow(0 0 6px #76FF03); }
 
+.chaos-tab-icon {
+  font-size: var(--text-base);
+  line-height: 1;
+  transition: filter 0.3s ease;
+}
+
+/* ════════════════════════════════════════════════
+   VIEWPORT — main split layout
+   ════════════════════════════════════════════════ */
 .chaos-viewport {
   display: flex;
   flex: 1;
   overflow: hidden;
   position: relative;
+  z-index: 2;
 }
 
+/* ─── HUD corner decorations (Step 6) ─── */
+.chaos-viewport::before,
+.chaos-viewport::after {
+  content: '';
+  position: absolute;
+  width: 18px;
+  height: 18px;
+  border-color: var(--tab-accent);
+  border-style: solid;
+  opacity: 0.4;
+  pointer-events: none;
+  z-index: 10000;
+  transition: border-color 0.5s ease;
+}
+
+.chaos-viewport::before {
+  top: 10px;
+  left: 10px;
+  border-width: 1px 0 0 1px;
+}
+
+.chaos-viewport::after {
+  top: 10px;
+  right: 10px;
+  border-width: 1px 1px 0 0;
+}
+
+/* ─── Content pane (left) ─── */
 .chaos-content-pane {
   flex: 1;
-  padding: var(--chaos-space-8);
   overflow-y: auto;
-  z-index: 5;
+  position: relative;
+  scrollbar-width: thin;
+  scrollbar-color: var(--chaos-border-medium) transparent;
+  /* Per-tab atmospheric radial tint (Step 6) */
+  background: radial-gradient(
+    ellipse 80% 55% at 50% 0%,
+    var(--tab-glow-xs) 0%,
+    transparent 65%
+  );
+  transition: background 0.5s ease;
 }
 
+.chaos-content-pane::-webkit-scrollbar {
+  width: 4px;
+}
+
+.chaos-content-pane::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.chaos-content-pane::-webkit-scrollbar-thumb {
+  background: var(--chaos-border-medium);
+  border-radius: 2px;
+}
+
+/* Content fade-in on tab switch */
+.chaos-content-enter {
+  animation: contentFadeIn 0.25s ease forwards;
+}
+
+/* ─── Sidebar (right) ─── */
 .chaos-sidebar-pane {
-  width: 320px;
-  border-left: 4px solid var(--pixel-white);
-  background-color: var(--chaos-surface);
-  z-index: 5;
+  width: 280px;
+  flex-shrink: 0;
+  border-left: 1px solid var(--chaos-border-subtle);
+  background-color: var(--chaos-glass);
+  /* Diagonal stripe texture (Step 5) */
+  background-image:
+    repeating-linear-gradient(
+      45deg,
+      transparent,
+      transparent 8px,
+      rgba(255, 255, 255, 0.009) 8px,
+      rgba(255, 255, 255, 0.009) 9px
+    );
+  backdrop-filter: blur(var(--glass-blur));
+  -webkit-backdrop-filter: blur(var(--glass-blur));
   overflow-y: auto;
+  scrollbar-width: thin;
+  scrollbar-color: var(--chaos-border-medium) transparent;
+  box-shadow:
+    -1px 0 0 var(--tab-glow-xs),
+    -4px 0 20px rgba(0, 0, 0, 0.3),
+    inset 1px 0 0 var(--chaos-border-subtle);
+  transition: box-shadow 0.5s ease;
 }
 
+.chaos-sidebar-pane::-webkit-scrollbar {
+  width: 3px;
+}
+
+.chaos-sidebar-pane::-webkit-scrollbar-thumb {
+  background: var(--chaos-border-medium);
+}
+
+/* ════════════════════════════════════════════════
+   FOOTER — TERMINAL STATUS BAR (Step 5)
+   ════════════════════════════════════════════════ */
 .chaos-footer {
-  height: 60px;
-  border-top: 4px solid var(--pixel-white);
+  flex-shrink: 0;
+  height: 48px;
+  border-top: 1px solid var(--chaos-border-subtle);
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 0 var(--chaos-space-6);
-  background-color: var(--chaos-bg);
+  padding: 0 var(--space-8);
+  background-color: var(--chaos-surface);
+  z-index: 100;
+  /* Thick 3px accent line bottom (mirrors header) */
+  box-shadow:
+    0 -3px 0 var(--tab-accent),
+    0 -4px 30px var(--tab-glow-soft),
+    0 -4px 60px var(--tab-glow-xs);
+  transition: box-shadow 0.5s ease;
+}
+
+.chaos-footer-insert {
   font-family: var(--font-pixel);
-  font-size: 9px;
-  z-index: 10;
+  font-size: 7px;
+  letter-spacing: 0.08em;
+  color: var(--tab-accent);
+  text-shadow: 0 0 10px var(--tab-glow), 0 0 20px var(--tab-glow-soft);
+  animation: terminalBlink 1.4s step-end infinite;
+  transition: color 0.5s ease, text-shadow 0.5s ease;
 }
 
-.font-pixel-size {
+/* New footer sys label (Step 5) */
+.chaos-footer-sys {
   font-family: var(--font-pixel);
-  font-size: 8px;
+  font-size: 7px;
+  color: var(--chaos-text-muted);
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
 }
 
-.chaos-footer-back-btn {
-  font-family: var(--font-pixel) !important;
-  font-size: 8px !important;
-  border-color: var(--pixel-white) !important;
+/* New session timer (Step 5) */
+.chaos-footer-timer {
+  font-family: var(--font-pixel);
+  font-size: 7px;
+  color: var(--tab-accent);
+  text-shadow: 0 0 8px var(--tab-glow);
+  letter-spacing: 0.08em;
+  transition: color 0.5s ease, text-shadow 0.5s ease;
 }
 
-/* Tab icons */
-.tab-icon {
-  font-size: var(--text-base);
+.chaos-footer-back {
+  font-family: var(--font-mono);
+  font-size: var(--text-xs);
+  font-weight: 500;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--chaos-text-secondary);
+  cursor: pointer;
+  border: 1px solid var(--chaos-border-medium);
+  padding: 0.3rem 0.9rem;
+  border-radius: 2px;
+  background: transparent;
+  transition: all 0.15s ease;
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
 }
 
-/* Stacking for small viewports */
+.chaos-footer-back:hover {
+  color: var(--chaos-text-primary);
+  border-color: var(--chaos-text-primary);
+  transform: translateY(-1px);
+}
+
+/* ════════════════════════════════════════════════
+   UTILITY
+   ════════════════════════════════════════════════ */
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  border: 0;
+}
+
+/* Global text selection — accent color */
+::selection {
+  background-color: var(--tab-accent);
+  color: var(--chaos-bg);
+}
+
+/* ════════════════════════════════════════════════
+   RESPONSIVE — tablet and below
+   ════════════════════════════════════════════════ */
 @media (max-width: 1024px) {
   .chaos-viewport {
     flex-direction: column;
@@ -238,13 +516,77 @@
 
   .chaos-content-pane {
     overflow-y: visible;
+    min-height: 60vh;
   }
 
   .chaos-sidebar-pane {
     width: 100%;
     border-left: none;
-    border-top: 4px solid var(--pixel-white);
-    overflow-y: visible;
+    border-top: 1px solid var(--chaos-border-subtle);
+    max-height: 50vh;
+  }
+
+  .chaos-viewport::before,
+  .chaos-viewport::after {
+    display: none;
   }
 }
 
+@media (max-width: 640px) {
+  .chaos-header {
+    padding: 0 var(--space-4);
+  }
+
+  .chaos-header-title {
+    font-size: 9px;
+  }
+
+  .chaos-header-sub {
+    display: none;
+  }
+
+  .chaos-footer {
+    padding: 0 var(--space-4);
+  }
+
+  .chaos-footer-sys,
+  .chaos-footer-timer {
+    display: none;
+  }
+}
+
+/* ════════════════════════════════════════════════
+   LIGHT MODE STYLE OVERRIDES
+   ════════════════════════════════════════════════ */
+.chaos-overlay-container[data-theme="light"]::before {
+  background-image: repeating-linear-gradient(
+    0deg,
+    rgba(0, 0, 0, 0.012) 0px,
+    rgba(0, 0, 0, 0.012) 1px,
+    transparent 1px,
+    transparent 4px
+  );
+}
+
+.chaos-overlay-container[data-theme="light"]::after {
+  background:
+    linear-gradient(90deg, rgba(220, 50, 50, 0.018) 0px, transparent 60px),
+    linear-gradient(270deg, rgba(50, 50, 200, 0.018) 0px, transparent 60px),
+    radial-gradient(ellipse 100% 55% at 50% 100%, rgba(200, 190, 175, 0.3) 0%, transparent 70%);
+}
+
+.chaos-overlay-container[data-theme="light"] .chaos-vignette {
+  background: radial-gradient(
+    ellipse 100% 100% at 50% 50%,
+    transparent 55%,
+    rgba(200, 190, 180, 0.3) 100%
+  );
+}
+
+.chaos-overlay-container[data-theme="light"] .chaos-content-pane {
+  background: radial-gradient(
+    ellipse 80% 55% at 50% 0%,
+    var(--tab-glow-xs) 0%,
+    transparent 65%
+  );
+}

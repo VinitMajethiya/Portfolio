@@ -1,504 +1,570 @@
-import React, { useState, useRef, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import styles from './GuitarLab.module.css';
 
-// Base frequencies for open strings E2, A2, D3, G3, B3, E4
-const BASE_FREQS = [329.63, 246.94, 196.00, 146.83, 110.00, 82.41]; // High E (string 1) to Low E (string 6)
-const STRING_NAMES = ['E', 'B', 'G', 'D', 'A', 'E'];
-
-// Chord fingering database: [string 1, string 2, string 3, string 4, string 5, string 6]
-const CHORDS = {
-  Am: [0, 1, 2, 2, 0, -1],
-  Em: [0, 0, 0, 2, 2, 0],
-  G: [3, 0, 0, 0, 2, 3],
-  C: [0, 1, 0, 2, 3, -1],
-  D: [2, 3, 2, 0, -1, -1],
-  F: [1, 1, 2, 3, 3, 1],
-  Dm: [1, 3, 2, 0, -1, -1],
-  E: [0, 0, 1, 2, 2, 0]
+// Midi-note calculations and frequency mapping helpers
+const NOTE_TO_MIDI = {
+  C: 0, 'C#': 1, Db: 1, D: 2, 'D#': 3, Eb: 3, E: 4, F: 5, 'F#': 6, Gb: 6, G: 7, 'G#': 8, Ab: 8, A: 9, 'A#': 10, Bb: 10, B: 11
 };
 
-const CHORD_PROGRESSIONS = [
-  { chords: ['Am', 'G', 'C', 'Em'], desc: 'classic sad boi progression' },
-  { chords: ['Em', 'C', 'G', 'D'], desc: 'stadium rock anthem anthem' },
-  { chords: ['Am', 'F', 'C', 'G'], desc: 'pop-punk nostalgia loops' },
-  { chords: ['C', 'G', 'Am', 'F'], desc: 'universal 4-chord journey' }
+function getFrequency(noteName) {
+  const match = noteName.match(/^([A-G]#?|Bb|Db|Eb|Gb|Ab)([0-9])$/);
+  if (!match) return 440;
+  const key = match[1];
+  const octave = parseInt(match[2]);
+  const semitones = NOTE_TO_MIDI[key];
+  const midi = 12 * (octave + 1) + semitones;
+  return 440 * Math.pow(2, (midi - 69) / 12);
+}
+
+const CHORD_NOTES = {
+  'C':   ['C3', 'E3', 'G3', 'C4', 'E4'],
+  'G':   ['G2', 'B2', 'D3', 'G3', 'B3', 'G4'],
+  'Am':  ['A2', 'E3', 'A3', 'C4', 'E4'],
+  'F':   ['F2', 'C3', 'F3', 'A3', 'C4', 'F4'],
+  'Dm':  ['D3', 'A3', 'D4', 'F4'],
+  'Em':  ['E2', 'B2', 'E3', 'G3', 'B3', 'E4'],
+  'C7':  ['C3', 'E3', 'Bb3', 'C4', 'E4'],
+  'G7':  ['G2', 'B2', 'D3', 'F3', 'G3', 'B3']
+};
+
+const STRINGS = [
+  { openNote: 'E4', name: 'e', notes: ['E4', 'F4', 'F#4', 'G4', 'G#4', 'A4', 'A#4', 'B4', 'C5', 'C#5', 'D5', 'D#5', 'E5'] },
+  { openNote: 'B3', name: 'B', notes: ['B3', 'C4', 'C#4', 'D4', 'D#4', 'E4', 'F4', 'F#4', 'G4', 'G#4', 'A4', 'A#4', 'B4'] },
+  { openNote: 'G3', name: 'G', notes: ['G3', 'G#3', 'A3', 'A#3', 'B3', 'C4', 'C#4', 'D4', 'D#4', 'E4', 'F4', 'F#4', 'G4'] },
+  { openNote: 'D3', name: 'D', notes: ['D3', 'D#3', 'E3', 'F3', 'F#3', 'G3', 'G#3', 'A3', 'A#3', 'B3', 'C4', 'C#4', 'D4'] },
+  { openNote: 'A2', name: 'A', notes: ['A2', 'A#2', 'B2', 'C3', 'C#3', 'D3', 'D#3', 'E3', 'F3', 'F#3', 'G3', 'G#3', 'A3'] },
+  { openNote: 'E2', name: 'E', notes: ['E2', 'F2', 'F#2', 'G2', 'G#2', 'A2', 'A#2', 'B2', 'C3', 'C#3', 'D3', 'D#3', 'E3'] }
 ];
 
+const STRUM_PATTERNS = ['STRUM', 'ARPEGGIO', 'MUTE', 'CHORD RUN'];
+const CHORDS_LIST = ['C', 'G', 'Am', 'F', 'Dm', 'Em', 'C7', 'G7'];
+
+// Audio Context Singleton / Initialization
+let audioCtx = null;
+
+function initAudio() {
+  if (!audioCtx) {
+    audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+  }
+  if (audioCtx.state === 'suspended') {
+    audioCtx.resume();
+  }
+}
+
 export default function GuitarLab() {
-  const [selectedChord, setSelectedChord] = useState('Am');
-  const [bpm, setBpm] = useState(90);
-  const [isMetronomeActive, setIsMetronomeActive] = useState(false);
-  const [progression, setProgression] = useState(CHORD_PROGRESSIONS[0]);
+  const [calibrating, setCalibrating] = useState(true);
+  const [calibProgress, setCalibProgress] = useState(0);
+  const [calibStatus, setCalibStatus] = useState('INITIALISING SYNTH CORE...');
 
-  // Endless custom loop states
-  const [customLoop, setCustomLoop] = useState([]);
-  const [isLoopingActive, setIsLoopingActive] = useState(false);
-  const [strumPattern, setStrumPattern] = useState('arpeggio'); // 'arpeggio', 'down-up', 'bass-strum'
-  const [currentLoopIndex, setCurrentLoopIndex] = useState(-1);
+  // Interactive Synth/Metronome states
+  const [isPlaying, setIsPlaying] = useState(false);
+  const [isMetroActive, setIsMetroActive] = useState(false);
+  const [tempo, setTempo] = useState(120);
+  const [activePattern, setActivePattern] = useState('STRUM');
+  const [selectedChord, setSelectedChord] = useState('C');
+  const [progression, setProgression] = useState(['C', 'Am', 'F', 'G']);
+  const [currentChordIdx, setCurrentChordIdx] = useState(-1);
+  const [swing, setSwing] = useState('left');
 
-  const audioCtxRef = useRef(null);
-  const metronomeIntervalRef = useRef(null);
-  const metronomeTickRef = useRef(0);
-  const loopTimeoutRef = useRef(null);
-  const [metronomeSwing, setMetronomeSwing] = useState(false);
+  const timerRef = useRef(null);
 
-  // Initialize AudioContext safely
-  const initAudio = () => {
-    if (!audioCtxRef.current) {
-      audioCtxRef.current = new (window.AudioContext || window.webkitAudioContext)();
-    }
-    if (audioCtxRef.current.state === 'suspended') {
-      audioCtxRef.current.resume();
-    }
-    return audioCtxRef.current;
-  };
+  // Sound pluck engine
+  const triggerPluck = (noteName, timeOffset = 0, volume = 0.25) => {
+    initAudio();
+    const freq = getFrequency(noteName);
+    const now = audioCtx.currentTime + timeOffset;
 
-  // Play synthesized note
-  const playSynthesizedNote = (freq, delayTime = 0) => {
-    const ctx = initAudio();
-    const now = ctx.currentTime + delayTime;
+    const osc = audioCtx.createOscillator();
+    const filter = audioCtx.createBiquadFilter();
+    const gainNode = audioCtx.createGain();
 
-    const osc = ctx.createOscillator();
-    const gainNode = ctx.createGain();
-    const waveShaper = ctx.createWaveShaper();
+    osc.connect(filter);
+    filter.connect(gainNode);
+    gainNode.connect(audioCtx.destination);
 
-    osc.type = 'sawtooth';
+    // Dynamic wave shape modeling
+    osc.type = 'triangle';
     osc.frequency.setValueAtTime(freq, now);
 
-    const makeDistortionCurve = (amount = 15) => {
-      const k = typeof amount === 'number' ? amount : 50;
-      const n_samples = 44100;
-      const curve = new Float32Array(n_samples);
-      const deg = Math.PI / 180;
-      for (let i = 0; i < n_samples; ++i) {
-        const x = (i * 2) / n_samples - 1;
-        curve[i] = ((3 + k) * x * 20 * deg) / (Math.PI + k * Math.abs(x));
-      }
-      return curve;
-    };
-    waveShaper.curve = makeDistortionCurve();
-    waveShaper.oversample = '4x';
+    // Add brief sawtooth oscillator overlay for metal string pluck bite
+    let osc2 = null;
+    if (volume > 0.05) {
+      osc2 = audioCtx.createOscillator();
+      const gain2 = audioCtx.createGain();
+      osc2.type = 'sawtooth';
+      osc2.frequency.setValueAtTime(freq, now);
+      gain2.gain.setValueAtTime(volume * 0.15, now);
+      gain2.gain.exponentialRampToValueAtTime(0.0001, now + 0.15);
+      osc2.connect(gain2);
+      gain2.connect(filter);
+      osc2.start(now);
+      osc2.stop(now + 0.2);
+    }
 
-    gainNode.gain.setValueAtTime(0, now);
-    gainNode.gain.linearRampToValueAtTime(0.18, now + 0.01);
-    gainNode.gain.exponentialRampToValueAtTime(0.001, now + 1.5);
-
-    const filter = ctx.createBiquadFilter();
+    // Filter sweep (decays filter freq to produce a warm acoustic sound)
     filter.type = 'lowpass';
-    filter.frequency.setValueAtTime(900, now);
-    filter.frequency.exponentialRampToValueAtTime(150, now + 1.1);
+    filter.Q.setValueAtTime(1.5, now);
+    filter.frequency.setValueAtTime(freq * 5, now);
+    filter.frequency.exponentialRampToValueAtTime(freq * 1.1, now + 0.25);
 
-    osc.connect(waveShaper);
-    waveShaper.connect(filter);
-    filter.connect(gainNode);
-    gainNode.connect(ctx.destination);
+    // Gain decay
+    gainNode.gain.setValueAtTime(volume, now);
+    gainNode.gain.exponentialRampToValueAtTime(0.0001, now + 1.2);
 
     osc.start(now);
-    osc.stop(now + 1.6);
+    osc.stop(now + 1.3);
   };
 
-  // Strumming Pattern Engine
-  const triggerPatternStrum = (chordName) => {
+  // Strum trigger helper
+  const triggerStrum = (chordName, pattern = 'STRUM') => {
     initAudio();
-    const fingering = CHORDS[chordName];
-    if (!fingering) return;
+    const notes = CHORD_NOTES[chordName];
+    if (!notes) return;
 
-    const ctx = audioCtxRef.current;
-    const now = ctx.currentTime;
-    const beatDuration = 60 / bpm; // length of 1 beat in seconds
-
-    if (strumPattern === 'arpeggio') {
-      // Ascending strings stagger
-      let playedCount = 0;
-      for (let sIdx = 5; sIdx >= 0; sIdx--) {
-        const fret = fingering[sIdx];
-        if (fret !== -1) {
-          const baseFreq = BASE_FREQS[sIdx];
-          const freq = baseFreq * Math.pow(2, fret / 12);
-          playSynthesizedNote(freq, playedCount * 0.06);
-          playedCount++;
-        }
-      }
-    } else if (strumPattern === 'down-up') {
-      // Beat 1: Down strum
-      let playedCount = 0;
-      for (let sIdx = 5; sIdx >= 0; sIdx--) {
-        const fret = fingering[sIdx];
-        if (fret !== -1) {
-          const baseFreq = BASE_FREQS[sIdx];
-          const freq = baseFreq * Math.pow(2, fret / 12);
-          playSynthesizedNote(freq, playedCount * 0.04);
-          playedCount++;
-        }
-      }
-      
-      // Beat 3: Up strum (reversed, high strings to low)
-      let upPlayedCount = 0;
-      for (let sIdx = 0; sIdx <= 5; sIdx++) {
-        const fret = fingering[sIdx];
-        if (fret !== -1) {
-          const baseFreq = BASE_FREQS[sIdx];
-          const freq = baseFreq * Math.pow(2, fret / 12);
-          playSynthesizedNote(freq, (beatDuration * 2) + (upPlayedCount * 0.025));
-          upPlayedCount++;
-        }
-      }
-    } else if (strumPattern === 'bass-strum') {
-      // Beat 1: Bass note
-      let lowestStringIdx = 5;
-      while (lowestStringIdx >= 0 && fingering[lowestStringIdx] === -1) {
-        lowestStringIdx--;
-      }
-      if (lowestStringIdx >= 0) {
-        const fret = fingering[lowestStringIdx];
-        const baseFreq = BASE_FREQS[lowestStringIdx];
-        const freq = baseFreq * Math.pow(2, fret / 12);
-        playSynthesizedNote(freq, 0);
-      }
-
-      // Beat 2: Full strum
-      let playedCount = 0;
-      for (let sIdx = 5; sIdx >= 0; sIdx--) {
-        const fret = fingering[sIdx];
-        if (fret !== -1) {
-          const baseFreq = BASE_FREQS[sIdx];
-          const freq = baseFreq * Math.pow(2, fret / 12);
-          playSynthesizedNote(freq, beatDuration + (playedCount * 0.04));
-          playedCount++;
-        }
-      }
-
-      // Beat 4: Full strum
-      playedCount = 0;
-      for (let sIdx = 5; sIdx >= 0; sIdx--) {
-        const fret = fingering[sIdx];
-        if (fret !== -1) {
-          const baseFreq = BASE_FREQS[sIdx];
-          const freq = baseFreq * Math.pow(2, fret / 12);
-          playSynthesizedNote(freq, (beatDuration * 3) + (playedCount * 0.04));
-          playedCount++;
-        }
-      }
-    }
-  };
-
-  // Strum single chord trigger
-  const strumChord = (chordName) => {
-    triggerPatternStrum(chordName);
-  };
-
-  // Click string directly on board
-  const handleStringClick = (stringIndex) => {
-    const fingering = CHORDS[selectedChord];
-    const fret = fingering[stringIndex];
-    if (fret !== -1) {
-      const baseFreq = BASE_FREQS[stringIndex];
-      const freq = baseFreq * Math.pow(2, fret / 12);
-      playSynthesizedNote(freq);
-    }
-  };
-
-  // Metronome audio tick
-  const playMetronomeClick = () => {
-    const ctx = initAudio();
-    const now = ctx.currentTime;
-    const osc = ctx.createOscillator();
-    const gainNode = ctx.createGain();
-
-    osc.type = 'triangle';
-    const pitch = metronomeTickRef.current % 4 === 0 ? 800 : 500;
-    osc.frequency.setValueAtTime(pitch, now);
-
-    gainNode.gain.setValueAtTime(0.08, now);
-    gainNode.gain.exponentialRampToValueAtTime(0.001, now + 0.04);
-
-    osc.connect(gainNode);
-    gainNode.connect(ctx.destination);
-
-    osc.start(now);
-    osc.stop(now + 0.05);
-
-    metronomeTickRef.current++;
-    setMetronomeSwing(prev => !prev);
-  };
-
-  // Metronome ticks loop
-  useEffect(() => {
-    if (isMetronomeActive) {
-      const intervalMs = (60 / bpm) * 1000;
-      metronomeTickRef.current = 0;
-      playMetronomeClick();
-      metronomeIntervalRef.current = setInterval(playMetronomeClick, intervalMs);
-    } else {
-      clearInterval(metronomeIntervalRef.current);
-    }
-    return () => clearInterval(metronomeIntervalRef.current);
-  }, [isMetronomeActive, bpm]);
-
-  // Custom Endless Chord Loop Scheduler
-  useEffect(() => {
-    if (!isLoopingActive) {
-      if (loopTimeoutRef.current) {
-        clearTimeout(loopTimeoutRef.current);
-      }
-      setCurrentLoopIndex(-1);
+    if (pattern === 'MUTE') {
+      notes.forEach((note, idx) => {
+        triggerPluck(note, idx * 0.015, 0.04);
+      });
       return;
     }
 
-    const playLoopTick = () => {
-      const activeSequence = customLoop.length > 0 ? customLoop : progression.chords;
-      if (activeSequence.length === 0) return;
-
-      setCurrentLoopIndex(prevIndex => {
-        const nextIndex = (prevIndex + 1) % activeSequence.length;
-        const currentChord = activeSequence[nextIndex];
-        
-        // Sync selected chord visualization on fretboard
-        setSelectedChord(currentChord);
-        triggerPatternStrum(currentChord);
-
-        // Schedule next chord strum in loop (1 chord per bar = 4 beats)
-        const measureDuration = (60 / bpm) * 4 * 1000;
-        loopTimeoutRef.current = setTimeout(playLoopTick, measureDuration);
-
-        return nextIndex;
+    if (pattern === 'ARPEGGIO') {
+      notes.forEach((note, idx) => {
+        triggerPluck(note, idx * 0.12, 0.2);
       });
+      return;
+    }
+
+    if (pattern === 'CHORD RUN') {
+      notes.forEach((note, idx) => {
+        triggerPluck(note, idx * 0.06, 0.22);
+      });
+      return;
+    }
+
+    // Default fast STRUM
+    notes.forEach((note, idx) => {
+      triggerPluck(note, idx * 0.03, 0.25);
+    });
+  };
+
+  // Metronome tick sound
+  const triggerMetronomeBeep = () => {
+    initAudio();
+    const now = audioCtx.currentTime;
+    const osc = audioCtx.createOscillator();
+    const gainNode = audioCtx.createGain();
+
+    osc.connect(gainNode);
+    gainNode.connect(audioCtx.destination);
+
+    osc.type = 'triangle';
+    osc.frequency.setValueAtTime(1000, now);
+    gainNode.gain.setValueAtTime(0.06, now);
+    gainNode.gain.exponentialRampToValueAtTime(0.0001, now + 0.04);
+
+    osc.start(now);
+    osc.stop(now + 0.05);
+  };
+
+  // Bootup sequence simulation
+  useEffect(() => {
+    const startProgress = () => {
+      let currentVal = 0;
+      const interval = setInterval(() => {
+        currentVal += Math.floor(Math.random() * 12) + 5;
+        if (currentVal >= 100) {
+          currentVal = 100;
+          clearInterval(interval);
+          setCalibProgress(100);
+          setCalibStatus('AUDIO SYSTEM CONFIGURED. ONLINE.');
+          setTimeout(() => {
+            setCalibrating(false);
+          }, 400);
+        } else {
+          setCalibProgress(currentVal);
+          if (currentVal < 30) {
+            setCalibStatus('INITIALISING SYNTH CORE...');
+          } else if (currentVal < 60) {
+            setCalibStatus('MAPPING OSCILLATORS...');
+          } else if (currentVal < 85) {
+            setCalibStatus('CALIBRATING FILTER NODES...');
+          } else {
+            setCalibStatus('CONFIGURING OUTPUT BUSSES...');
+          }
+        }
+      }, 100);
     };
 
-    playLoopTick();
+    startProgress();
+  }, []);
 
-    return () => {
-      if (loopTimeoutRef.current) {
-        clearTimeout(loopTimeoutRef.current);
+  // Metronome / Sequencer loops
+  useEffect(() => {
+    if (!isPlaying) {
+      if (timerRef.current) clearInterval(timerRef.current);
+      setCurrentChordIdx(-1);
+      return;
+    }
+
+    const intervalMs = (60 / tempo) * 1000;
+
+    const tick = () => {
+      // Swing pendulum
+      setSwing(s => s === 'left' ? 'right' : 'left');
+
+      // Loop index progression
+      setCurrentChordIdx(prevIdx => {
+        const nextIdx = progression.length > 0 ? (prevIdx + 1) % progression.length : 0;
+        const activeChord = progression[nextIdx];
+        if (activeChord) {
+          triggerStrum(activeChord, activePattern);
+        }
+        return nextIdx;
+      });
+
+      if (isMetroActive) {
+        triggerMetronomeBeep();
       }
     };
-  }, [isLoopingActive, customLoop, progression, bpm, strumPattern]);
 
-  // Click chord button: either pluck chord OR append to custom loop
+    // Trigger initial tick
+    tick();
+
+    const intervalId = setInterval(tick, intervalMs);
+    timerRef.current = intervalId;
+
+    return () => clearInterval(intervalId);
+  }, [isPlaying, tempo, progression, activePattern, isMetroActive]);
+
+  // Click on Chord board
   const handleChordClick = (chord) => {
-    if (isLoopingActive) {
-      // Append to custom loop queue if loop is active/being configured
-      setCustomLoop(prev => [...prev, chord].slice(-8)); // limit queue to 8 chords max
-    } else {
-      // Normal chord click: pluck immediately
-      setSelectedChord(chord);
-      strumChord(chord);
+    setSelectedChord(chord);
+    triggerStrum(chord, activePattern);
+    // Add to progression queue if we have space (max 8)
+    if (progression.length < 8) {
+      setProgression(prev => [...prev, chord]);
     }
   };
 
-  const handleNextProgression = () => {
-    const index = CHORD_PROGRESSIONS.indexOf(progression);
-    const nextIndex = (index + 1) % CHORD_PROGRESSIONS.length;
-    setProgression(CHORD_PROGRESSIONS[nextIndex]);
-    if (!isLoopingActive) {
-      setSelectedChord(CHORD_PROGRESSIONS[nextIndex].chords[0]);
-    }
+  // Progression Panel Actions
+  const handleClearProgression = () => {
+    setProgression([]);
+    setCurrentChordIdx(-1);
   };
 
-  const clearCustomLoop = () => {
-    setCustomLoop([]);
-    setCurrentLoopIndex(-1);
+  const handleDefaultProgression = () => {
+    setProgression(['C', 'Am', 'F', 'G']);
+    setCurrentChordIdx(-1);
   };
 
-  // Get dots coordinates on SVG Fretboard
-  const renderFretboardDots = () => {
-    const fingering = CHORDS[selectedChord];
-    return fingering.map((fret, sIdx) => {
-      if (fret <= 0) return null;
-      const x = 50 + (fret - 0.5) * 55;
-      const y = 30 + sIdx * 28;
-      return (
-        <circle 
-          key={sIdx}
-          cx={x} 
-          cy={y} 
-          r={6} 
-          fill="var(--neon-cyan)" 
-          className={styles.cyanPulse}
-        />
-      );
-    });
-  };
-
-  // Render muted markers 'X' or open 'O' on left of fretboard
-  const renderNutMarkers = () => {
-    const fingering = CHORDS[selectedChord];
-    return fingering.map((fret, sIdx) => {
-      const y = 30 + sIdx * 28 + 4;
-      let markerText = '';
-      let markerColor = 'var(--pixel-white)';
-
-      if (fret === -1) {
-        markerText = '×';
-        markerColor = 'var(--neon-pink)';
-      } else if (fret === 0) {
-        markerText = '○';
-        markerColor = 'var(--neon-cyan)';
-      }
-
-      return (
-        <text 
-          key={sIdx}
-          x={18}
-          y={y}
-          fill={markerColor}
-          fontFamily="monospace"
-          fontSize="16"
-          textAnchor="middle"
+  // Calibration Bootloader view
+  if (calibrating) {
+    return (
+      <div
+        style={{
+          display: 'flex',
+          flexDirection: 'column',
+          alignItems: 'center',
+          justifyContent: 'center',
+          height: '100%',
+          minHeight: 'calc(100vh - 200px)',
+          fontFamily: 'var(--font-mono)',
+          padding: 'var(--space-8)',
+          animation: 'paneReveal 0.3s ease'
+        }}
+      >
+        <div
+          style={{
+            maxWidth: '500px',
+            width: '100%',
+            backgroundColor: 'var(--chaos-surface)',
+            border: '2px dashed var(--tab-accent)',
+            borderRadius: '4px',
+            padding: 'var(--space-6)',
+            boxShadow: '0 0 20px var(--tab-glow-soft)',
+            position: 'relative'
+          }}
         >
-          {markerText}
-        </text>
-      );
-    });
-  };
+          <div
+            style={{
+              position: 'absolute',
+              top: '8px',
+              right: '12px',
+              fontSize: '8px',
+              color: 'var(--tab-accent)'
+            }}
+          >
+            SYS.STATUS: IN_DEV
+          </div>
+          <h2
+            style={{
+              fontFamily: 'var(--font-display)',
+              fontSize: 'var(--text-lg)',
+              color: 'var(--chaos-text-primary)',
+              marginBottom: 'var(--space-4)',
+              fontWeight: 900,
+              letterSpacing: '0.05em'
+            }}
+          >
+            🎸 GUITAR SYNTHESIS CORE
+          </h2>
+          <div
+            style={{
+              fontSize: '10px',
+              color: 'var(--chaos-text-secondary)',
+              lineHeight: '1.8',
+              marginBottom: 'var(--space-6)',
+              minHeight: '60px'
+            }}
+          >
+            <div>&gt; CONNECTING WEB AUDIO NODES...</div>
+            <div className="term-caret">&gt; {calibStatus}</div>
+          </div>
+          <div
+            style={{
+              width: '100%',
+              height: '16px',
+              backgroundColor: 'rgba(255, 255, 255, 0.03)',
+              border: '1px solid var(--chaos-border-medium)',
+              position: 'relative',
+              overflow: 'hidden'
+            }}
+          >
+            <div
+              style={{
+                width: `${calibProgress}%`,
+                height: '100%',
+                backgroundColor: 'var(--tab-accent)',
+                transition: 'width 0.1s ease',
+                boxShadow: '0 0 8px var(--tab-glow)'
+              }}
+            />
+          </div>
+          <div
+            style={{
+              display: 'flex',
+              justifyContent: 'space-between',
+              fontSize: '9px',
+              color: 'var(--chaos-text-muted)',
+              marginTop: '8px'
+            }}
+          >
+            <span>[ CALIBRATING MODULES ]</span>
+            <span>{calibProgress}%</span>
+          </div>
+        </div>
+      </div>
+    );
+  }
 
-  const activeSequence = customLoop.length > 0 ? customLoop : progression.chords;
+  // Fretboard spacing calculations for SVG
+  const fretX = (idx) => 40 + idx * 58;
+  const stringY = (idx) => 15 + idx * 18;
 
   return (
     <div className={styles.guitarContainer}>
-      <h2 className={styles.title}>GUITAR CHORD LAB</h2>
-      <p className={styles.subtitle}>CLICK CHORDS TO PLAY OR ADD TO LOOP. SELECT PATTERNS &amp; SET ENDLESS LOOPS.</p>
+      <h2 className={styles.title}>GUITAR CHORDS LAB</h2>
+      <p className={styles.subtitle}>INTERACTIVE OSCILLATOR SYNTH &amp; SEQUENCE RUNNER</p>
 
-      {/* Metronome & Loop Controls */}
+      {/* METRONOME & CYCLE PANEL */}
       <div className={styles.metronomeBar}>
         <div className={styles.metronomeLayout}>
-          <button 
-            onClick={() => setIsLoopingActive(!isLoopingActive)}
-            className={`${styles.loopBtn} ${isLoopingActive ? styles.activeLoop : ''}`}
+          <button
+            onClick={() => setIsPlaying(p => !p)}
+            className={`${styles.loopBtn} ${isPlaying ? styles.activeLoop : ''}`}
           >
-            {isLoopingActive ? '[ LOOP: ON ]' : '[ LOOP: OFF ]'}
+            {isPlaying ? '■ STOP LOOP' : '▶ RUN LOOP'}
           </button>
-          
-          <button 
-            onClick={() => setIsMetronomeActive(!isMetronomeActive)}
-            className={`${styles.metroBtn} ${isMetronomeActive ? styles.activeMetro : ''}`}
+
+          <button
+            onClick={() => setIsMetroActive(m => !m)}
+            className={`${styles.metroBtn} ${isMetroActive ? styles.activeMetro : ''}`}
           >
-            {isMetronomeActive ? '[ METRO: ON ]' : '[ METRO: OFF ]'}
+            {isMetroActive ? '🔊 METRO ON' : '🔇 METRO OFF'}
           </button>
 
           <div className={styles.tempoSlider}>
-            <span>BPM: {bpm}</span>
-            <input 
-              type="range" 
-              min="60" 
-              max="180" 
-              value={bpm} 
-              onChange={(e) => setBpm(parseInt(e.target.value))}
+            <span>TEMPO: {tempo} BPM</span>
+            <input
+              type="range"
+              min="60"
+              max="200"
+              value={tempo}
+              onChange={(e) => setTempo(parseInt(e.target.value))}
             />
           </div>
         </div>
 
-        {/* Metronome swinging pendant */}
+        {/* Pendulum Swing animation */}
         <div className={styles.metronomeVisual}>
-          <div className={`${styles.pendant} ${metronomeSwing ? styles.swingLeft : styles.swingRight}`} />
+          <div
+            className={`${styles.pendant} ${
+              isPlaying ? (swing === 'left' ? styles.swingLeft : styles.swingRight) : ''
+            }`}
+          />
         </div>
       </div>
 
-      {/* Strumming Pattern Selectors */}
+      {/* STRUMMING PATTERNS */}
       <div className={styles.patternBar}>
-        <span className={styles.patternTitle}>PATTERN:</span>
-        <button 
-          onClick={() => setStrumPattern('arpeggio')} 
-          className={`${styles.patBtn} ${strumPattern === 'arpeggio' ? styles.activePat : ''}`}
-        >
-          ARPEGGIO
-        </button>
-        <button 
-          onClick={() => setStrumPattern('down-up')} 
-          className={`${styles.patBtn} ${strumPattern === 'down-up' ? styles.activePat : ''}`}
-        >
-          DOWN-UP
-        </button>
-        <button 
-          onClick={() => setStrumPattern('bass-strum')} 
-          className={`${styles.patBtn} ${strumPattern === 'bass-strum' ? styles.activePat : ''}`}
-        >
-          BASS-STRUM
-        </button>
-      </div>
-
-      {/* Chord Fretboard Selectors */}
-      <div className={styles.chordBoard}>
-        {Object.keys(CHORDS).map((chordName) => (
-          <button 
-            key={chordName}
-            className={`${styles.chordBtn} ${selectedChord === chordName ? styles.activeChord : ''}`}
-            onClick={() => handleChordClick(chordName)}
+        <span className={styles.patternTitle}>STRUM PATTERN:</span>
+        {STRUM_PATTERNS.map((pat) => (
+          <button
+            key={pat}
+            onClick={() => setActivePattern(pat)}
+            className={`${styles.patBtn} ${activePattern === pat ? styles.activePat : ''}`}
           >
-            {chordName}
+            {pat}
           </button>
         ))}
       </div>
 
-      {/* Interactive Fretboard SVG */}
+      {/* CHORD BOARD SELECTORS */}
+      <div className={styles.chordBoard}>
+        {CHORDS_LIST.map((chord) => (
+          <button
+            key={chord}
+            onClick={() => handleChordClick(chord)}
+            className={`${styles.chordBtn} ${selectedChord === chord ? styles.activeChord : ''}`}
+          >
+            {chord}
+          </button>
+        ))}
+      </div>
+
+      {/* FRETBOARD INTERACTIVE PANEL */}
       <div className={styles.fretboardContainer}>
-        <svg viewBox="0 0 740 200" className={styles.fretboardSvg}>
-          <rect x="30" y="15" width="680" height="170" fill="var(--chaos-surface)" stroke="var(--pixel-white)" strokeWidth="2" />
-          
-          {/* Frets */}
-          {Array.from({ length: 13 }).map((_, idx) => {
-            const x = 30 + idx * 55;
-            const strokeColor = idx === 0 ? 'var(--pixel-white)' : 'var(--pixel-muted)';
-            const strokeWidth = idx === 0 ? '6' : '2';
-            return (
-              <line key={idx} x1={x} y1={15} x2={x} y2={185} stroke={strokeColor} strokeWidth={strokeWidth} />
-            );
-          })}
+        <svg className={styles.fretboardSvg} viewBox="0 0 800 120" xmlns="http://www.w3.org/2000/svg">
+          {/* Wood Neck Backing */}
+          <rect x="0" y="5" width="800" height="110" rx="4" fill="rgba(255, 255, 255, 0.015)" stroke="var(--chaos-border-medium)" strokeWidth="1" />
 
-          {/* Fret Markers */}
-          {[3, 5, 7, 9].map((fret) => (
-            <circle key={fret} cx={30 + (fret - 0.5) * 55} cy={100} r="4" fill="var(--pixel-muted)" />
+          {/* Fretboard markers (dots at 3, 5, 7, 9 and double dots at 12) */}
+          <circle cx={fretX(2.5)} cy="60" r="4" fill="var(--chaos-text-muted)" opacity="0.4" />
+          <circle cx={fretX(4.5)} cy="60" r="4" fill="var(--chaos-text-muted)" opacity="0.4" />
+          <circle cx={fretX(6.5)} cy="60" r="4" fill="var(--chaos-text-muted)" opacity="0.4" />
+          <circle cx={fretX(8.5)} cy="60" r="4" fill="var(--chaos-text-muted)" opacity="0.4" />
+          <circle cx={fretX(11.5)} cy="40" r="4" fill="var(--chaos-text-muted)" opacity="0.4" />
+          <circle cx={fretX(11.5)} cy="80" r="4" fill="var(--chaos-text-muted)" opacity="0.4" />
+
+          {/* Draw Frets (Vertical bars) */}
+          {Array.from({ length: 13 }).map((_, idx) => (
+            <line
+              key={`fret-${idx}`}
+              x1={fretX(idx)}
+              y1="5"
+              x2={fretX(idx)}
+              y2="115"
+              stroke={idx === 0 ? 'var(--tab-accent)' : 'var(--chaos-border-strong)'}
+              strokeWidth={idx === 0 ? '4' : '2'}
+            />
           ))}
-          <circle cx={30 + (12 - 0.5) * 55} cy={60} r="4" fill="var(--pixel-muted)" />
-          <circle cx={30 + (12 - 0.5) * 55} cy={140} r="4" fill="var(--pixel-muted)" />
 
-          {/* Strings */}
-          {Array.from({ length: 6 }).map((_, idx) => {
-            const y = 30 + idx * 28;
-            const thickness = 1 + (5 - idx) * 0.8;
-            return (
-              <g key={idx} className={styles.stringGroup} onClick={() => handleStringClick(idx)}>
-                <line x1="30" y1={y} x2="710" y2={y} stroke="transparent" strokeWidth="15" style={{ cursor: 'pointer' }} />
-                <line x1="30" y1={y} x2="710" y2={y} stroke="var(--pixel-white)" strokeWidth={thickness} style={{ pointerEvents: 'none' }} />
-                <text x="8" y={y + 4} fill="var(--pixel-muted)" fontSize="10" fontFamily="monospace">{STRING_NAMES[idx]}</text>
-              </g>
-            );
-          })}
+          {/* Fret numbers */}
+          {Array.from({ length: 12 }).map((_, idx) => (
+            <text
+              key={`num-${idx}`}
+              x={fretX(idx) + 29}
+              y="112"
+              fill="var(--chaos-text-muted)"
+              fontSize="8"
+              fontFamily="var(--font-mono)"
+              textAnchor="middle"
+            >
+              {idx + 1}
+            </text>
+          ))}
 
-          {/* Finger dots & nut marks */}
-          {renderFretboardDots()}
-          {renderNutMarkers()}
+          {/* Draw Strings (Horizontal lines) */}
+          {STRINGS.map((string, sIdx) => (
+            <g key={`str-group-${sIdx}`} className={styles.stringGroup}>
+              {/* Thick strings have wider stroke */}
+              <line
+                x1="40"
+                y1={stringY(sIdx)}
+                x2="760"
+                y2={stringY(sIdx)}
+                stroke="var(--chaos-text-secondary)"
+                strokeWidth={1.5 + (5 - sIdx) * 0.4}
+                opacity="0.75"
+              />
+              
+              {/* String label on left */}
+              <text
+                x="20"
+                y={stringY(sIdx) + 3}
+                fill="var(--tab-accent)"
+                fontSize="9"
+                fontFamily="var(--font-mono)"
+                textAnchor="middle"
+              >
+                {string.name}
+              </text>
+
+              {/* Fret interactable note nodes */}
+              {string.notes.map((note, fIdx) => (
+                <circle
+                  key={`note-${sIdx}-${fIdx}`}
+                  cx={fIdx === 0 ? 30 : fretX(fIdx) - 29}
+                  cy={stringY(sIdx)}
+                  r="6"
+                  fill="transparent"
+                  stroke="transparent"
+                  style={{ cursor: 'pointer' }}
+                  onMouseEnter={(e) => {
+                    // Trigger note sound on hover with low volume if mouse button is down
+                    if (e.buttons === 1) {
+                      triggerPluck(note, 0, 0.2);
+                    }
+                  }}
+                  onClick={() => {
+                    triggerPluck(note, 0, 0.28);
+                  }}
+                >
+                  <title>{note}</title>
+                </circle>
+              ))}
+            </g>
+          ))}
         </svg>
       </div>
 
-      {/* Chord Progression Info Box / Loop Queue builder */}
+      {/* CHORD PROGRESSION PANEL / CONSOLE */}
       <div className={styles.progressionPanel}>
         <div className={styles.progHeader}>
-          <span>{customLoop.length > 0 ? 'CUSTOM PLAYBACK QUEUE' : 'DEFAULT SOUND PROGRESSION'}</span>
+          <span>LOOP PROGRESSION QUEUE ({progression.length}/8)</span>
           <div className={styles.progActions}>
-            {customLoop.length > 0 && (
-              <button onClick={clearCustomLoop} className={styles.clearBtn}>[ CLEAR ]</button>
-            )}
-            <button onClick={handleNextProgression} className={styles.cycleBtn}>[ CYCLE PROG ]</button>
+            <button onClick={handleDefaultProgression} className={styles.cycleBtn}>
+              [ DEFAULT ]
+            </button>
+            <button onClick={handleClearProgression} className={styles.clearBtn}>
+              [ CLEAR ]
+            </button>
           </div>
         </div>
+
         <div className={styles.progBody}>
-          <div className={styles.progChords}>
-            {activeSequence.map((ch, idx) => (
-              <span 
-                key={idx} 
-                onClick={() => setSelectedChord(ch)}
-                className={`${styles.progChordSpan} ${selectedChord === ch && currentLoopIndex === idx ? styles.activeProgChord : ''}`}
-              >
-                {ch} {idx < activeSequence.length - 1 ? '→' : ''}
-              </span>
-            ))}
-          </div>
-          {customLoop.length > 0 ? (
-            <p className={styles.progDesc}>Click chord buttons to queue notes (max 8). Loop steps through these on beat.</p>
+          {progression.length === 0 ? (
+            <p className={styles.progDesc}>Progression empty. Click chords above to compile a sequence.</p>
           ) : (
-            <p className={styles.progDesc}>Vibe: <em>{progression.desc}</em>. Toggle loop to step automatically.</p>
+            <div className={styles.progChords}>
+              {progression.map((chord, idx) => (
+                <span
+                  key={idx}
+                  className={`${styles.progChordSpan} ${
+                    currentChordIdx === idx ? styles.activeProgChord : ''
+                  }`}
+                  onClick={() => triggerStrum(chord, activePattern)}
+                >
+                  {chord}
+                  {idx < progression.length - 1 ? ' → ' : ''}
+                </span>
+              ))}
+            </div>
           )}
+          <p className={styles.progDesc} style={{ marginTop: '8px', fontSize: '8px' }}>
+            * TIP: Run Loop to play your progression chronologically. Hover/click strings on the fretboard to play solo notes!
+          </p>
         </div>
       </div>
     </div>

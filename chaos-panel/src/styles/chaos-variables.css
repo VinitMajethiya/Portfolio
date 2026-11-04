@@ -1,37 +1,157 @@
-/* chaos-variables.css — CSS variables for Chaos Mode */
+/* chaos-variables.css — Bootleg Arcade Cabinet design tokens */
+
+@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=DM+Mono:ital,wght@0,300;0,400;0,500;1,300&family=Press+Start+2P&display=swap');
 
 :root {
-  /* === BACKGROUNDS === */
-  --chaos-bg:         #0A0A0F;   /* near-black, blue-black undertone */
-  --chaos-surface:    #12121A;   /* card backgrounds */
-  --chaos-elevated:   #1A1A26;   /* elevated panels */
+  /* === BACKGROUNDS — TRUE VOID === */
+  --chaos-bg:          #020202;   /* true void — no hue, nothing */
+  --chaos-surface:     #0A0A0A;   /* 1 step above void */
+  --chaos-elevated:    #111111;   /* raised panels */
+  --chaos-glass:       rgba(10, 10, 10, 0.92);
 
-  /* === NEON ACCENTS === */
-  --neon-orange:      #FF6B35;   /* alien shooter, primary accent */
-  --neon-cyan:        #00F5FF;   /* guitar lab */
-  --neon-pink:        #FF2D78;   /* book analyser */
-  --neon-green:       #39FF14;   /* junk lab */
+  /* === PHOSPHOR AMBIENT — bleed-only, never used for text === */
+  --phosphor:          #0FFF50;
+  --phosphor-dim:      rgba(15, 255, 80, 0.055);
+  --phosphor-xs:       rgba(15, 255, 80, 0.018);
 
-  /* === PIXEL / RETRO === */
-  --pixel-gold:       #FFD700;   /* scores, hi-score */
-  --pixel-white:      #E8E8F0;   /* primary text */
-  --pixel-muted:      #6B6B8A;   /* secondary text */
-  --pixel-grid:       #1A1A2E;   /* background grid lines */
+  /* === NEON ACCENTS (per-tab, overridden below) === */
+  --neon-orange:  #FF5722;
+  --neon-cyan:    #00E5FF;
+  --neon-violet:  #D500F9;
+  --neon-green:   #76FF03;
+  --neon-gold:    #FFD600;
 
-  /* === FONTS === */
+  /* === ACTIVE TAB ACCENT TOKENS (CSS variables that shift per tab) === */
+  --tab-accent:      #FF5722;
+  --tab-glow:        rgba(255, 87, 34, 0.40);
+  --tab-glow-soft:   rgba(255, 87, 34, 0.10);
+  --tab-glow-xs:     rgba(255, 87, 34, 0.05);
+
+  /* === TEXT — warm, mirrors portfolio noir theme === */
+  --chaos-text-primary:    #F0EAE0;   /* warm cream */
+  --chaos-text-secondary:  #8A8AA8;   /* muted purple-grey */
+  --chaos-text-muted:      #3E3E60;   /* very muted, labels */
+
+  /* === BORDERS === */
+  --chaos-border-subtle:  rgba(255, 255, 255, 0.05);
+  --chaos-border-medium:  rgba(255, 255, 255, 0.10);
+  --chaos-border-strong:  rgba(255, 255, 255, 0.18);
+
+  /* === FONTS — exact same as portfolio === */
+  --font-display: 'Playfair Display', Georgia, serif;
+  --font-mono:    'DM Mono', 'Courier New', monospace;
   --font-pixel:   'Press Start 2P', monospace;
-  --font-ui:      'Space Mono', monospace;
-  --font-display: 'Orbitron', sans-serif;
 
-  /* === SCANLINES === */
-  --scanline-opacity: 0.04;
+  /* === TYPE SCALE — mirrors portfolio === */
+  --text-xs:   0.75rem;
+  --text-sm:   0.875rem;
+  --text-base: 1rem;
+  --text-lg:   1.125rem;
+  --text-xl:   1.375rem;
+  --text-2xl:  1.75rem;
+  --text-3xl:  2.5rem;
 
-  /* === SPACINGS === */
-  --chaos-space-1: 0.25rem;
-  --chaos-space-2: 0.5rem;
-  --chaos-space-3: 0.75rem;
-  --chaos-space-4: 1rem;
-  --chaos-space-6: 1.5rem;
-  --chaos-space-8: 2rem;
-  --chaos-space-12: 3rem;
+  /* === SPACING — mirrors portfolio === */
+  --space-1:  0.25rem;
+  --space-2:  0.5rem;
+  --space-3:  0.75rem;
+  --space-4:  1rem;
+  --space-6:  1.5rem;
+  --space-8:  2rem;
+  --space-12: 3rem;
+  --space-16: 4rem;
+
+  /* === EFFECTS === */
+  --glass-blur:  14px;
+  --scanline-h:  3px;
+}
+
+/* ════════════════════════════════════════════════
+   PER-TAB ACCENT OVERRIDES
+   Applied via data-tab attribute on the root div
+   ════════════════════════════════════════════════ */
+
+[data-tab="shooter"] {
+  --tab-accent:    #FF5722;
+  --tab-glow:      rgba(255, 87, 34, 0.40);
+  --tab-glow-soft: rgba(255, 87, 34, 0.10);
+  --tab-glow-xs:   rgba(255, 87, 34, 0.05);
+}
+
+[data-tab="guitar"] {
+  --tab-accent:    #00E5FF;
+  --tab-glow:      rgba(0, 229, 255, 0.40);
+  --tab-glow-soft: rgba(0, 229, 255, 0.10);
+  --tab-glow-xs:   rgba(0, 229, 255, 0.05);
+}
+
+[data-tab="books"] {
+  --tab-accent:    #D500F9;
+  --tab-glow:      rgba(213, 0, 249, 0.40);
+  --tab-glow-soft: rgba(213, 0, 249, 0.10);
+  --tab-glow-xs:   rgba(213, 0, 249, 0.05);
+}
+
+[data-tab="junk"] {
+  --tab-accent:    #76FF03;
+  --tab-glow:      rgba(118, 255, 3, 0.40);
+  --tab-glow-soft: rgba(118, 255, 3, 0.10);
+  --tab-glow-xs:   rgba(118, 255, 3, 0.05);
+}
+
+/* ════════════════════════════════════════════════
+   LIGHT THEME OVERRIDES
+   ════════════════════════════════════════════════ */
+.chaos-overlay-container[data-theme="light"] {
+  /* === BACKGROUNDS === */
+  --chaos-bg:          #FAF8F5;   /* soft warm paper white */
+  --chaos-surface:     #F3EFE9;   /* slightly darker warm grey */
+  --chaos-elevated:    #EAE4D9;   /* card background */
+  --chaos-glass:       rgba(243, 239, 233, 0.85);
+
+  /* === TEXT === */
+  --chaos-text-primary:    #151522;   /* near-black for high legibility */
+  --chaos-text-secondary:  #535370;   /* muted dark grey */
+  --chaos-text-muted:      #8D8DA6;   /* placeholders and labels */
+
+  /* === BORDERS === */
+  --chaos-border-subtle:  rgba(0, 0, 0, 0.08);
+  --chaos-border-medium:  rgba(0, 0, 0, 0.15);
+  --chaos-border-strong:  rgba(0, 0, 0, 0.25);
+
+  /* === NEON ACCENTS (Adjusted for contrast in light mode) === */
+  --neon-orange:  #E64A19;
+  --neon-cyan:    #0097A7;
+  --neon-violet:  #8E24AA;
+  --neon-green:   #33691E;
+  --neon-gold:    #F57F17;
+}
+
+/* Light mode per-tab variables overrides */
+.chaos-overlay-container[data-theme="light"][data-tab="shooter"] {
+  --tab-accent:    #E64A19;
+  --tab-glow:      rgba(230, 74, 25, 0.35);
+  --tab-glow-soft: rgba(230, 74, 25, 0.08);
+  --tab-glow-xs:   rgba(230, 74, 25, 0.04);
+}
+
+.chaos-overlay-container[data-theme="light"][data-tab="guitar"] {
+  --tab-accent:    #0097A7;
+  --tab-glow:      rgba(0, 151, 167, 0.35);
+  --tab-glow-soft: rgba(0, 151, 167, 0.08);
+  --tab-glow-xs:   rgba(0, 151, 167, 0.04);
+}
+
+.chaos-overlay-container[data-theme="light"][data-tab="books"] {
+  --tab-accent:    #8E24AA;
+  --tab-glow:      rgba(142, 36, 170, 0.35);
+  --tab-glow-soft: rgba(142, 36, 170, 0.08);
+  --tab-glow-xs:   rgba(142, 36, 170, 0.04);
+}
+
+.chaos-overlay-container[data-theme="light"][data-tab="junk"] {
+  --tab-accent:    #33691E;
+  --tab-glow:      rgba(51, 105, 30, 0.35);
+  --tab-glow-soft: rgba(51, 105, 30, 0.08);
+  --tab-glow-xs:   rgba(51, 105, 30, 0.04);
 }

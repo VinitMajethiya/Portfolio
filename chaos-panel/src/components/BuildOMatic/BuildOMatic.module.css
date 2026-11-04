@@ -1,5 +1,14 @@
 /* BuildOMatic.module.css — CSS module for Build-o-Matic junk lab */
 
+/* ── Legacy variable compat shim ── */
+/* --pixel-muted     → var(--chaos-text-muted)                  */
+/* --pixel-white     → var(--chaos-text-primary)                */
+/* --pixel-grid      → var(--chaos-border-subtle)               */
+/* --pixel-gold      → var(--neon-gold)                         */
+/* --chaos-space-N   → var(--space-N)                           */
+/* --font-ui         → var(--font-mono)                         */
+/* --text-inverse    → #020202                                  */
+
 .container {
   display: flex;
   flex-direction: column;
@@ -7,6 +16,8 @@
   width: 100%;
   max-width: 800px;
   margin: 0 auto;
+  /* Atmospheric green tint for junk lab tab */
+  background: radial-gradient(ellipse 80% 60% at 50% 0%, rgba(57, 255, 20, 0.05) 0%, transparent 70%);
 }
 
 .title {

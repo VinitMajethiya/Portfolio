@@ -1,0 +1,43 @@
+%PDF-1.4
+1 0 obj
+<< /Type /Catalog /Pages 2 0 R >>
+endobj
+2 0 obj
+<< /Type /Pages /Kids [3 0 R] /Count 1 >>
+endobj
+3 0 obj
+<< /Type /Page /Parent 2 0 R /MediaBox [0 0 612 792] /Resources << /Font << /F1 4 0 R >> >> /Contents 5 0 R >>
+endobj
+4 0 obj
+<< /Type /Font /Subtype /Type1 /BaseFont /Helvetica >>
+endobj
+5 0 obj
+<< /Length 264 >>
+stream
+BT
+/F1 18 Tf
+50 720 Td
+(Vinit Atul Majethiya - Resume) Tj
+/F1 11 Tf
+0 -30 Td
+(B.Tech AIML Student | vinitmajethiya@gmail.com) Tj
+0 -20 Td
+(GitHub: github.com/VinitMajethiya | LinkedIn: linkedin.com/in/vinitmajethiya) Tj
+0 -40 Td
+(Please replace assets/Vinit_Majethiya_Resume.pdf with your final PDF resume.) Tj
+ET
+endstream
+endobj
+xref
+0 6
+0000000000 65535 f 
+0000000010 00000 n 
+0000000059 00000 n 
+00000000116 00000 n 
+0000000223 00000 n 
+0000000298 00000 n 
+trailer
+<< /Size 6 /Root 1 0 R >>
+startxref
+614
+%%EOF

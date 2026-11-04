@@ -5,7 +5,7 @@ import './styles/chaos-base.css'
 import './styles/chaos-animations.css'
 import ChaosApp from './ChaosApp.jsx'
 
-const container = document.getElementById('chaos-root');
+const container = document.getElementById('chaos-root') || document.getElementById('root');
 if (container) {
   const root = createRoot(container);
   root.render(

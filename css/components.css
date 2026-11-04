@@ -58,7 +58,15 @@
 .nav-actions {
   display: flex;
   align-items: center;
-  gap: var(--space-6);
+  gap: var(--space-4);
+}
+
+.nav-resume {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-1);
+  padding: 0.35rem 0.85rem;
+  font-size: 11px;
 }
 
 /* Theme Dial Switcher Widget */
@@ -182,6 +190,42 @@ body.theme-noir .theme-dial-knob {
   color: var(--accent-primary);
   font-weight: 300;
   animation: cursorBlink 1s step-end infinite;
+}
+
+.hero-cta {
+  display: flex;
+  align-items: center;
+  gap: var(--space-4);
+  flex-wrap: wrap;
+}
+
+.hero-socials {
+  display: flex;
+  align-items: center;
+  gap: var(--space-6);
+  margin-top: var(--space-6);
+}
+
+.hero-social-link {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2);
+  font-family: var(--font-mono);
+  font-size: var(--text-xs);
+  color: var(--text-tertiary);
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  text-decoration: none;
+  transition: color 0.2s ease, transform 0.2s ease;
+}
+
+.hero-social-link svg {
+  display: block;
+}
+
+.hero-social-link:hover {
+  color: var(--accent-primary);
+  transform: translateY(-1px);
 }
 
 /* Giant background watermark brace on right side */
@@ -791,6 +835,25 @@ body.theme-noir .game-score-ticker {
   font-size: var(--text-xs);
   color: var(--text-tertiary);
   margin: 0;
+}
+
+.footer-socials {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  font-family: var(--font-mono);
+  font-size: var(--text-xs);
+  color: var(--text-tertiary);
+}
+
+.footer-socials a {
+  color: var(--text-secondary);
+  text-decoration: none;
+  transition: color 0.2s ease;
+}
+
+.footer-socials a:hover {
+  color: var(--accent-primary);
 }
 
 /* ==================== KONAMI CODE EASTER EGG ==================== */

@@ -36,6 +36,17 @@
   display: none; /* Hide watermarks on mobile to reduce visual noise */
 }
 
+/* Footer & Hero adjustments for mobile */
+.footer-container {
+  flex-direction: column;
+  gap: var(--space-4);
+  text-align: center;
+}
+
+.hero-socials {
+  gap: var(--space-4);
+}
+
 /* Polaroid Deck stacked vertically on mobile */
 .polaroid-deck {
   height: auto;
