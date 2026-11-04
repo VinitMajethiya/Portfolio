@@ -6,6 +6,21 @@ const url = require('url');
 const PORT = 3000;
 const PUBLIC_DIR = path.resolve(__dirname);
 
+// Load .env.local if present
+const envLocalPath = path.resolve(__dirname, '.env.local');
+if (fs.existsSync(envLocalPath)) {
+  const envContent = fs.readFileSync(envLocalPath, 'utf8');
+  envContent.split('\n').forEach(line => {
+    const match = line.match(/^\s*([\w.-]+)\s*=\s*(.*)?\s*$/);
+    if (match) {
+      const key = match[1];
+      let value = match[2] || '';
+      value = value.trim().replace(/^['"]|['"]$/g, '');
+      process.env[key] = value;
+    }
+  });
+}
+
 // Helper to serve a static file
 function serveStaticFile(filePath, res) {
   fs.stat(filePath, (err, stats) => {
