@@ -51,6 +51,23 @@
   --text-2xl:  1.75rem;
   --text-3xl:  2.5rem;
 
+  /* === RETRO ARCADE CABINET TOKENS (Reference match) === */
+  --arcade-cabinet-bg:     #080914;
+  --arcade-hood-top:        #1e2040;
+  --arcade-hood-side:       #15162e;
+  --arcade-hood-bottom:     #111226;
+  --arcade-bezel:           #0e0f20;
+  --arcade-bezel-inner:     #090a16;
+  --arcade-screen-bg-top:   #232560;
+  --arcade-screen-bg-bot:   #181944;
+  --arcade-screen-horizon:  #131438;
+  --arcade-grid-line:       rgba(115, 145, 255, 0.17);
+  --arcade-pixel-gold:      #ffb830;
+  --arcade-pixel-orange:    #e04a1b;
+  --arcade-pixel-shadow:    #4e0f08;
+  --arcade-text-hud:        #9cb0ea;
+  --arcade-text-bright:     #edf1ff;
+
   /* === SPACING — mirrors portfolio === */
   --space-1:  0.25rem;
   --space-2:  0.5rem;
@@ -70,6 +87,13 @@
    PER-TAB ACCENT OVERRIDES
    Applied via data-tab attribute on the root div
    ════════════════════════════════════════════════ */
+
+[data-tab="menu"] {
+  --tab-accent:    #ffb830;
+  --tab-glow:      rgba(255, 184, 48, 0.40);
+  --tab-glow-soft: rgba(255, 184, 48, 0.12);
+  --tab-glow-xs:   rgba(255, 184, 48, 0.05);
+}
 
 [data-tab="shooter"] {
   --tab-accent:    #FF5722;
@@ -128,7 +152,14 @@
 }
 
 /* Light mode per-tab variables overrides */
-.chaos-overlay-container[data-theme="light"][data-tab="shooter"] {
+.chaos-overlay-container[data-theme="light"][data-tab="menu"] {
+  --tab-accent:    #ffb830;
+  --tab-glow:      rgba(255, 184, 48, 0.40);
+  --tab-glow-soft: rgba(255, 184, 48, 0.12);
+  --tab-glow-xs:   rgba(255, 184, 48, 0.05);
+}
+
+[data-tab="shooter"] {
   --tab-accent:    #E64A19;
   --tab-glow:      rgba(230, 74, 25, 0.35);
   --tab-glow-soft: rgba(230, 74, 25, 0.08);

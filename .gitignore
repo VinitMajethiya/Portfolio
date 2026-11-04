@@ -7,7 +7,6 @@ dist/
 tmp/
 out/
 .vercel/
-chaos/
 
 # Local env files
 .env.local
