@@ -122,15 +122,15 @@ document.addEventListener('DOMContentLoaded', () => {
     const height = 210;
     
     // Core user node
-    const coreNode = { label: 'USER VINIT', x: width / 2, y: height / 2, size: 24, stroke: 'var(--accent-primary)' };
+    const coreNode = { label: 'ML SUITE', x: width / 2, y: height / 2, size: 24, stroke: 'var(--accent-primary)' };
     
     // Connected item nodes
     const itemNodes = [
-      { label: 'SVD Model', angle: 0, distance: 75, speed: 0.007, color: 'var(--text-primary)' },
-      { label: 'Goodreads DB', angle: 1.2, distance: 70, speed: 0.009, color: 'var(--text-secondary)' },
-      { label: 'MovieLens 100K', angle: 2.4, distance: 80, speed: 0.005, color: 'var(--text-secondary)' },
-      { label: 'Thriller Latent', angle: 3.6, distance: 75, speed: 0.006, color: '#39A388' },
-      { label: 'Collaborative Filter', angle: 4.8, distance: 85, speed: 0.004, color: 'var(--text-primary)' }
+      { label: 'Heart Risk Model', angle: 0, distance: 75, speed: 0.007, color: 'var(--text-primary)' },
+      { label: 'Diabetes Classifier', angle: 1.2, distance: 70, speed: 0.009, color: 'var(--text-secondary)' },
+      { label: 'Movie Recommender', angle: 2.4, distance: 80, speed: 0.005, color: '#39A388' },
+      { label: 'Streamlit Cloud', angle: 3.6, distance: 75, speed: 0.006, color: 'var(--accent-primary)' },
+      { label: 'Scikit-Learn', angle: 4.8, distance: 85, speed: 0.004, color: 'var(--text-primary)' }
     ];
 
     // Build SVG Elements
