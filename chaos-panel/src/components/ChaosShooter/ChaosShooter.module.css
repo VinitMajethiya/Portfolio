@@ -165,11 +165,17 @@
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: var(--space-4);
+  justify-content: space-between;
   width: 100%;
+  height: 100%;
   max-width: 800px;
-  padding: var(--space-4);
+  margin: 0 auto;
+  padding: 6px 8px 8px;
   box-sizing: border-box;
+  overflow: hidden;
+  touch-action: none;
+  user-select: none;
+  -webkit-user-select: none;
 }
 
 .canvas {
@@ -180,8 +186,14 @@
   image-rendering: pixelated;
   width: 100%;
   max-width: 800px;
+  max-height: 55vh;
   aspect-ratio: 4 / 3;
+  object-fit: contain;
   cursor: crosshair;
+  touch-action: none;
+  user-select: none;
+  -webkit-user-select: none;
+  flex-shrink: 1;
 }
 
 .hud {
@@ -191,6 +203,8 @@
   font-family: var(--font-mono);
   font-size: var(--text-xs);
   color: var(--chaos-text-muted);
+  flex-shrink: 0;
+  user-select: none;
 }
 
 .scanlineOverlay {
@@ -237,12 +251,13 @@
   align-items: center;
   width: 100%;
   max-width: 800px;
-  padding: 10px 4px 4px;
+  padding: 8px 4px 2px;
   gap: 12px;
   user-select: none;
   -webkit-user-select: none;
-  touch-action: manipulation;
+  touch-action: none;
   box-sizing: border-box;
+  flex-shrink: 0;
 }
 
 .dpadGroup {
@@ -264,7 +279,7 @@
   min-height: 48px;
   min-width: 52px;
   border-radius: 4px;
-  background: rgba(22, 24, 46, 0.9);
+  background: rgba(22, 24, 46, 0.95);
   color: #edf1ff;
   border: 2px solid rgba(115, 145, 255, 0.4);
   box-shadow: 0 4px 0 rgba(0, 0, 0, 0.7), inset 0 1px 0 rgba(255, 255, 255, 0.12);
@@ -272,7 +287,9 @@
   align-items: center;
   justify-content: center;
   cursor: pointer;
-  touch-action: manipulation;
+  touch-action: none;
+  user-select: none;
+  -webkit-user-select: none;
   transition: transform 0.06s ease, background 0.1s ease;
   letter-spacing: 0.05em;
 }
@@ -311,6 +328,13 @@
 }
 
 @media (max-width: 480px) {
+  .hints {
+    display: none; /* Hide keyboard hints on mobile to free up space for game and controls */
+  }
+  .gameContainer {
+    padding: 4px 4px 4px;
+    gap: 4px;
+  }
   .touchGamepad {
     padding: 6px 0 2px;
     gap: 6px;

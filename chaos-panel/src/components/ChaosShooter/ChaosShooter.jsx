@@ -1083,15 +1083,14 @@ export default function ChaosShooter() {
 
   /* ─── Direct Touch & Drag on Game Canvas (Mobile Smooth Slide & Auto-Fire) ─── */
   const handleTouchStart = (e) => {
+    if (e.cancelable) e.preventDefault();
     initAudio();
     if (gameState === 'START' || gameState === 'GAMEOVER') {
-      e.preventDefault();
       resetGame();
       setGameState('PLAYING');
       return;
     }
     if (gameState === 'PAUSED') {
-      e.preventDefault();
       setGameState('PLAYING');
       return;
     }
@@ -1107,8 +1106,8 @@ export default function ChaosShooter() {
   };
 
   const handleTouchMove = (e) => {
+    if (e.cancelable) e.preventDefault();
     if (gameState === 'PLAYING') {
-      e.preventDefault();
       const canvas = canvasRef.current;
       if (!canvas) return;
       const rect = canvas.getBoundingClientRect();
@@ -1119,33 +1118,34 @@ export default function ChaosShooter() {
     }
   };
 
-  const handleTouchEnd = () => {
+  const handleTouchEnd = (e) => {
+    if (e && e.cancelable) e.preventDefault();
     gameData.current.keys['space'] = false;
   };
 
   /* ─── Virtual Arcade Gamepad Handlers (Touch & Click Support) ─── */
   const startMoveLeft = (e) => {
-    e.preventDefault();
+    if (e && e.cancelable) e.preventDefault();
     initAudio();
     gameData.current.keys['arrowleft'] = true;
   };
   const stopMoveLeft = (e) => {
-    e.preventDefault();
+    if (e && e.cancelable) e.preventDefault();
     gameData.current.keys['arrowleft'] = false;
   };
 
   const startMoveRight = (e) => {
-    e.preventDefault();
+    if (e && e.cancelable) e.preventDefault();
     initAudio();
     gameData.current.keys['arrowright'] = true;
   };
   const stopMoveRight = (e) => {
-    e.preventDefault();
+    if (e && e.cancelable) e.preventDefault();
     gameData.current.keys['arrowright'] = false;
   };
 
   const startFire = (e) => {
-    e.preventDefault();
+    if (e && e.cancelable) e.preventDefault();
     initAudio();
     if (gameState === 'START' || gameState === 'GAMEOVER') {
       resetGame();
@@ -1155,12 +1155,12 @@ export default function ChaosShooter() {
     gameData.current.keys['space'] = true;
   };
   const stopFire = (e) => {
-    e.preventDefault();
+    if (e && e.cancelable) e.preventDefault();
     gameData.current.keys['space'] = false;
   };
 
   const togglePauseGame = (e) => {
-    e.preventDefault();
+    if (e && e.cancelable) e.preventDefault();
     initAudio();
     setGameState(current => (current === 'PLAYING' ? 'PAUSED' : 'PLAYING'));
   };
@@ -1194,6 +1194,7 @@ export default function ChaosShooter() {
           onTouchStart={handleTouchStart}
           onTouchMove={handleTouchMove}
           onTouchEnd={handleTouchEnd}
+          onTouchCancel={handleTouchEnd}
           aria-label="Bug Invaders Game Canvas"
         />
 
@@ -1209,6 +1210,7 @@ export default function ChaosShooter() {
             className={`${styles.gamepadBtn} ${styles.moveBtn}`}
             onTouchStart={startMoveLeft}
             onTouchEnd={stopMoveLeft}
+            onTouchCancel={stopMoveLeft}
             onMouseDown={startMoveLeft}
             onMouseUp={stopMoveLeft}
             aria-label="Move Left"
@@ -1220,6 +1222,7 @@ export default function ChaosShooter() {
             className={`${styles.gamepadBtn} ${styles.moveBtn}`}
             onTouchStart={startMoveRight}
             onTouchEnd={stopMoveRight}
+            onTouchCancel={stopMoveRight}
             onMouseDown={startMoveRight}
             onMouseUp={stopMoveRight}
             aria-label="Move Right"
@@ -1242,6 +1245,7 @@ export default function ChaosShooter() {
             className={`${styles.gamepadBtn} ${styles.fireBtn}`}
             onTouchStart={startFire}
             onTouchEnd={stopFire}
+            onTouchCancel={stopFire}
             onMouseDown={startFire}
             onMouseUp={stopFire}
             aria-label="Fire Weapon"

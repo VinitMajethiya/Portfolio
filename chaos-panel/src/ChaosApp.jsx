@@ -324,6 +324,14 @@ export default function ChaosApp() {
                     <div className="arcade-blink-prompt">
                       ▓ PUSH ENTER OR CLICK TO START ▓
                     </div>
+                    <button
+                      type="button"
+                      className="arcade-menu-exit-btn"
+                      onClick={handleExit}
+                      aria-label="Exit back to portfolio"
+                    >
+                      ← EXIT TO PORTFOLIO
+                    </button>
                     <div className="arcade-keys-legend">
                       [↑/↓] SELECT · [ENTER] PLAY · [1-4] QUICK START · [ESC] EXIT
                     </div>
@@ -336,24 +344,49 @@ export default function ChaosApp() {
                  ────────────────────────────────────────── */}
               {activeTab !== 'menu' && (
                 <div className={`arcade-active-game-container ${showStats ? 'with-stats' : ''}`}>
-                  <main
-                    className="arcade-game-viewport"
-                    id={`chaos-panel-${activeTab}`}
-                    role="tabpanel"
-                    aria-label={`Chaos ${activeTab} panel`}
-                  >
-                    {activeTab === 'shooter' && <ChaosShooter />}
-                    {activeTab === 'guitar'  && <GuitarLab />}
-                    {activeTab === 'books'   && <BookAnalyser />}
-                    {activeTab === 'junk'    && <BuildOMatic />}
-                  </main>
+                  {/* Top in-game persistent navigation strip for instant return / exit */}
+                  <div className="arcade-game-top-nav" role="toolbar" aria-label="Game Navigation">
+                    <button
+                      type="button"
+                      className="arcade-top-btn arcade-top-btn-menu"
+                      onClick={() => handleTabChange('menu')}
+                      aria-label="Return to Arcade Title Menu"
+                    >
+                      ◀ ARCADE MENU
+                    </button>
+                    <span className="arcade-top-title">
+                      {MENU_ITEMS.find(m => m.id === activeTab)?.title || 'CHAOS ARCADE'}
+                    </span>
+                    <button
+                      type="button"
+                      className="arcade-top-btn arcade-top-btn-exit"
+                      onClick={handleExit}
+                      aria-label="Exit back to portfolio"
+                    >
+                      ✕ PORTFOLIO
+                    </button>
+                  </div>
 
-                  {/* Optional Diagnostic Sidebar Drawer */}
-                  {showStats && (
-                    <aside className="arcade-side-stats" aria-label="Arcade System Diagnostics">
-                      <StatsSidebar activeTab={activeTab} />
-                    </aside>
-                  )}
+                  <div className="arcade-game-workspace">
+                    <main
+                      className="arcade-game-viewport"
+                      id={`chaos-panel-${activeTab}`}
+                      role="tabpanel"
+                      aria-label={`Chaos ${activeTab} panel`}
+                    >
+                      {activeTab === 'shooter' && <ChaosShooter />}
+                      {activeTab === 'guitar'  && <GuitarLab />}
+                      {activeTab === 'books'   && <BookAnalyser />}
+                      {activeTab === 'junk'    && <BuildOMatic />}
+                    </main>
+
+                    {/* Optional Diagnostic Sidebar Drawer */}
+                    {showStats && (
+                      <aside className="arcade-side-stats" aria-label="Arcade System Diagnostics">
+                        <StatsSidebar activeTab={activeTab} />
+                      </aside>
+                    )}
+                  </div>
                 </div>
               )}
 
