@@ -230,4 +230,106 @@
   50%       { opacity: 1.0; box-shadow: 0 0 10px rgba(255, 107, 53, 0.3); }
 }
 
+/* ─── Touch Gamepad Controls (Mobile & Touch Screens) ─── */
+.touchGamepad {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+  max-width: 800px;
+  padding: 10px 4px 4px;
+  gap: 12px;
+  user-select: none;
+  -webkit-user-select: none;
+  touch-action: manipulation;
+  box-sizing: border-box;
+}
+
+.dpadGroup {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+}
+
+.actionGroup {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+}
+
+.gamepadBtn {
+  font-family: var(--font-pixel, monospace);
+  font-size: 10px;
+  padding: 12px 14px;
+  min-height: 48px;
+  min-width: 52px;
+  border-radius: 4px;
+  background: rgba(22, 24, 46, 0.9);
+  color: #edf1ff;
+  border: 2px solid rgba(115, 145, 255, 0.4);
+  box-shadow: 0 4px 0 rgba(0, 0, 0, 0.7), inset 0 1px 0 rgba(255, 255, 255, 0.12);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  touch-action: manipulation;
+  transition: transform 0.06s ease, background 0.1s ease;
+  letter-spacing: 0.05em;
+}
+
+.gamepadBtn:active {
+  transform: translateY(3px);
+  box-shadow: 0 1px 0 rgba(0, 0, 0, 0.7);
+  background: rgba(115, 145, 255, 0.35);
+  border-color: #ffb830;
+}
+
+.moveBtn {
+  color: #9cb0ea;
+}
+
+.fireBtn {
+  background: rgba(255, 87, 34, 0.3);
+  border-color: #ff5722;
+  color: #ffb830;
+  font-size: 11px;
+  padding: 12px 20px;
+  box-shadow: 0 4px 0 #8b1f00, 0 0 14px rgba(255, 87, 34, 0.35);
+}
+
+.fireBtn:active {
+  background: #ff5722;
+  color: #fff;
+  box-shadow: 0 1px 0 #8b1f00, 0 0 20px rgba(255, 87, 34, 0.7);
+}
+
+.pauseBtn {
+  font-size: 8px;
+  padding: 10px 8px;
+  min-width: 44px;
+  opacity: 0.85;
+}
+
+@media (max-width: 480px) {
+  .touchGamepad {
+    padding: 6px 0 2px;
+    gap: 6px;
+  }
+  .gamepadBtn {
+    font-size: 9px;
+    padding: 10px 8px;
+    min-height: 44px;
+    min-width: 44px;
+  }
+  .fireBtn {
+    font-size: 10px;
+    padding: 10px 14px;
+  }
+  .pauseBtn {
+    font-size: 7px;
+    padding: 8px 6px;
+    min-width: 38px;
+  }
+}
+
 

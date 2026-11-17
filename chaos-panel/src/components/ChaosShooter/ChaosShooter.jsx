@@ -1081,6 +1081,90 @@ export default function ChaosShooter() {
     }
   };
 
+  /* ─── Direct Touch & Drag on Game Canvas (Mobile Smooth Slide & Auto-Fire) ─── */
+  const handleTouchStart = (e) => {
+    initAudio();
+    if (gameState === 'START' || gameState === 'GAMEOVER') {
+      e.preventDefault();
+      resetGame();
+      setGameState('PLAYING');
+      return;
+    }
+    if (gameState === 'PAUSED') {
+      e.preventDefault();
+      setGameState('PLAYING');
+      return;
+    }
+    if (gameState === 'PLAYING') {
+      const canvas = canvasRef.current;
+      if (!canvas) return;
+      const rect = canvas.getBoundingClientRect();
+      const touch = e.touches[0];
+      const targetX = ((touch.clientX - rect.left) / rect.width) * 800;
+      gameData.current.player.x = Math.max(10, Math.min(800 - 10 - gameData.current.player.width, targetX - gameData.current.player.width / 2));
+      gameData.current.keys['space'] = true;
+    }
+  };
+
+  const handleTouchMove = (e) => {
+    if (gameState === 'PLAYING') {
+      e.preventDefault();
+      const canvas = canvasRef.current;
+      if (!canvas) return;
+      const rect = canvas.getBoundingClientRect();
+      const touch = e.touches[0];
+      const targetX = ((touch.clientX - rect.left) / rect.width) * 800;
+      gameData.current.player.x = Math.max(10, Math.min(800 - 10 - gameData.current.player.width, targetX - gameData.current.player.width / 2));
+      gameData.current.keys['space'] = true;
+    }
+  };
+
+  const handleTouchEnd = () => {
+    gameData.current.keys['space'] = false;
+  };
+
+  /* ─── Virtual Arcade Gamepad Handlers (Touch & Click Support) ─── */
+  const startMoveLeft = (e) => {
+    e.preventDefault();
+    initAudio();
+    gameData.current.keys['arrowleft'] = true;
+  };
+  const stopMoveLeft = (e) => {
+    e.preventDefault();
+    gameData.current.keys['arrowleft'] = false;
+  };
+
+  const startMoveRight = (e) => {
+    e.preventDefault();
+    initAudio();
+    gameData.current.keys['arrowright'] = true;
+  };
+  const stopMoveRight = (e) => {
+    e.preventDefault();
+    gameData.current.keys['arrowright'] = false;
+  };
+
+  const startFire = (e) => {
+    e.preventDefault();
+    initAudio();
+    if (gameState === 'START' || gameState === 'GAMEOVER') {
+      resetGame();
+      setGameState('PLAYING');
+      return;
+    }
+    gameData.current.keys['space'] = true;
+  };
+  const stopFire = (e) => {
+    e.preventDefault();
+    gameData.current.keys['space'] = false;
+  };
+
+  const togglePauseGame = (e) => {
+    e.preventDefault();
+    initAudio();
+    setGameState(current => (current === 'PLAYING' ? 'PAUSED' : 'PLAYING'));
+  };
+
   return (
     <div className={styles.gameContainer}>
       {/* Native Retro HUD */}
@@ -1107,6 +1191,9 @@ export default function ChaosShooter() {
           height={600}
           className={styles.canvas}
           onClick={handleCanvasClick}
+          onTouchStart={handleTouchStart}
+          onTouchMove={handleTouchMove}
+          onTouchEnd={handleTouchEnd}
           aria-label="Bug Invaders Game Canvas"
         />
 
@@ -1114,15 +1201,65 @@ export default function ChaosShooter() {
         <div className={styles.scanlineOverlay} />
       </div>
 
+      {/* ─── Touch Arcade Gamepad (Touch / Mobile Optimized) ─── */}
+      <div className={styles.touchGamepad} role="region" aria-label="Touch Arcade Controls">
+        <div className={styles.dpadGroup}>
+          <button
+            type="button"
+            className={`${styles.gamepadBtn} ${styles.moveBtn}`}
+            onTouchStart={startMoveLeft}
+            onTouchEnd={stopMoveLeft}
+            onMouseDown={startMoveLeft}
+            onMouseUp={stopMoveLeft}
+            aria-label="Move Left"
+          >
+            ◀ LEFT
+          </button>
+          <button
+            type="button"
+            className={`${styles.gamepadBtn} ${styles.moveBtn}`}
+            onTouchStart={startMoveRight}
+            onTouchEnd={stopMoveRight}
+            onMouseDown={startMoveRight}
+            onMouseUp={stopMoveRight}
+            aria-label="Move Right"
+          >
+            RIGHT ▶
+          </button>
+        </div>
+
+        <div className={styles.actionGroup}>
+          <button
+            type="button"
+            className={`${styles.gamepadBtn} ${styles.pauseBtn}`}
+            onClick={togglePauseGame}
+            aria-label="Pause or Resume"
+          >
+            {gameState === 'PAUSED' ? '▶ PLAY' : '⏸ PAUSE'}
+          </button>
+          <button
+            type="button"
+            className={`${styles.gamepadBtn} ${styles.fireBtn}`}
+            onTouchStart={startFire}
+            onTouchEnd={stopFire}
+            onMouseDown={startFire}
+            onMouseUp={stopFire}
+            aria-label="Fire Weapon"
+          >
+            🔥 FIRE
+          </button>
+        </div>
+      </div>
+
       <div className={styles.hints}>
         <div className={styles.hint}>
-          <span className={styles.key}>← →</span> / <span className={styles.key}>A D</span> Move
+          <span className={styles.key}>TOUCH &amp; DRAG</span> / <span className={styles.key}>← → / A D</span> Move
         </div>
         <div className={styles.hint}>
-          <span className={styles.key}>SPACE</span> Fire
+          <span className={styles.key}>🔥 / SPACE</span> Fire
         </div>
         <div className={styles.hint}>
-          <span className={styles.key}>ESC</span> Pause
+          <span className={styles.key}>TAP CANVAS</span> Start
         </div>
         
         {/* Dynamic active powerups list under screen */}
