@@ -1,117 +1,455 @@
-/* responsive.css — Mobile-first overrides and media queries */
+/* responsive.css — Masterclass mobile-first responsive architecture */
 
-/* ==================== MOBILE & TABLET (default / below 768px) ==================== */
+/* ==========================================================================
+   1. GLOBAL MOBILE DEFAULTS & OVERFLOW CONTROLS (Below 768px)
+   ========================================================================== */
 
-/* Asymmetric grids default to single-column stacking */
-.about-grid,
-.contact-grid {
-  grid-template-columns: 1fr;
-  gap: var(--space-8);
-}
-
-.stats-grid {
-  grid-template-columns: repeat(2, 1fr); /* 2 columns on mobile/tablet */
-  gap: var(--space-6);
-}
-
-/* Projects Stack */
-.project-row {
-  grid-template-columns: 1fr; /* Stack mockup and text vertically */
-  gap: var(--space-6);
-  min-height: auto;
-  padding-bottom: var(--space-12);
-  border-bottom: 1px solid var(--border-subtle);
-}
-
-.project-row-reverse .project-info {
-  grid-column: 1;
-}
-
-.project-row-reverse .project-mockup-wrapper {
-  grid-column: 1;
-  grid-row: auto;
-}
-
-.project-watermark {
-  display: none; /* Hide watermarks on mobile to reduce visual noise */
-}
-
-/* Footer & Hero adjustments for mobile */
-.footer-container {
-  flex-direction: column;
-  gap: var(--space-4);
-  text-align: center;
-}
-
-.hero-socials {
-  gap: var(--space-4);
-}
-
-/* Polaroid Deck stacked vertically on mobile */
-.polaroid-deck {
-  height: auto;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: var(--space-8);
-  padding-top: var(--space-4);
-  padding-bottom: var(--space-8);
-}
-
-.polaroid-card {
-  position: relative;
-  left: auto;
-  top: auto;
-  transform: rotate(1deg);
+html,
+body {
   width: 100%;
-  max-width: 290px;
+  max-width: 100vw;
+  overflow-x: hidden !important;
 }
 
-.polaroid-card:nth-child(even) {
-  transform: rotate(-1deg);
+.container {
+  padding-left: clamp(1rem, 4.5vw, 2rem);
+  padding-right: clamp(1rem, 4.5vw, 2rem);
 }
 
-/* Mobile Nav Drawer styling */
-.nav-links {
-  position: fixed;
-  top: 0;
-  right: -100%;
-  width: 80vw;
-  height: 100svh;
-  background-color: var(--bg-secondary);
-  border-left: 1px solid var(--border-medium);
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  gap: var(--space-8);
-  transition: right 0.4s cubic-bezier(0.16, 1, 0.3, 1);
-  z-index: 99;
-  box-shadow: -10px 0 30px var(--shadow-color);
+/* ==========================================================================
+   2. MOBILE NAVIGATION & DRAWER
+   ========================================================================== */
+
+.nav-wrapper {
+  height: 64px;
 }
 
-.nav-links.active {
-  right: 0;
+.nav {
+  height: 64px;
 }
 
-.nav-links li a {
-  font-size: var(--text-lg);
-  display: block;
-  padding: var(--space-2);
+.nav-name {
+  font-size: 13px;
+  letter-spacing: 0.05em;
+  max-width: 155px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.theme-dial-label {
+  display: none !important;
+}
+
+.nav-resume {
+  padding: 0.32rem 0.65rem;
+  font-size: 10px;
+  letter-spacing: 0.04em;
 }
 
 .nav-actions {
   display: flex;
   align-items: center;
-  gap: var(--space-3);
+  gap: 8px;
 }
 
 .nav-cta {
   display: none !important;
 }
 
-/* Hamburger toggle visibility */
 .nav-toggle {
   display: flex;
+  width: 36px;
+  height: 36px;
+  align-items: center;
+  justify-content: center;
+  padding: 6px;
+  cursor: pointer;
+}
+
+.nav-toggle span {
+  width: 22px;
+  height: 2px;
+}
+
+/* Mobile Nav Drawer */
+.nav-links {
+  position: fixed;
+  top: 0;
+  right: -100%;
+  width: 82vw;
+  max-width: 320px;
+  height: 100svh;
+  background-color: var(--bg-secondary);
+  border-left: 1px solid var(--border-medium);
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: flex-start;
+  padding: 85px 28px 40px;
+  gap: var(--space-4);
+  transition: right 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+  z-index: 99;
+  box-shadow: -15px 0 35px rgba(0, 0, 0, 0.45);
+  overflow-y: auto;
+}
+
+.nav-links.active {
+  right: 0;
+}
+
+.nav-links li {
+  width: 100%;
+  border-bottom: 1px solid var(--border-subtle);
+  padding-bottom: 10px;
+}
+
+.nav-links li a {
+  font-size: var(--text-base);
+  font-weight: 500;
+  display: block;
+  padding: var(--space-2) 0;
+}
+
+.mobile-drawer-extra {
+  margin-top: var(--space-2);
+  border-bottom: none !important;
+}
+
+.mobile-drawer-extra a {
+  color: var(--accent-primary) !important;
+  font-weight: 600;
+}
+
+/* Dimmed backdrop when mobile menu is open */
+.nav-backdrop {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.6);
+  backdrop-filter: blur(4px);
+  -webkit-backdrop-filter: blur(4px);
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.3s ease;
+  z-index: 98;
+}
+
+.nav-backdrop.active {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+/* ==========================================================================
+   3. HERO SECTION ON MOBILE
+   ========================================================================== */
+
+.hero {
+  min-height: 100svh;
+  height: auto;
+  padding-top: 84px;
+  padding-bottom: 48px;
+}
+
+.hero-watermark-brace {
+  display: none !important;
+}
+
+.hero-content {
+  max-width: 100%;
+}
+
+.hero-eyebrow {
+  font-size: 11px;
+  margin-bottom: var(--space-3);
+  letter-spacing: 0.12em;
+}
+
+.hero-headline {
+  font-size: clamp(2.1rem, 7.8vw, 3.4rem);
+  line-height: 1.15;
+  margin-bottom: var(--space-6);
+}
+
+.hero-cta {
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  gap: 10px;
+  width: 100%;
+}
+
+@media (min-width: 440px) {
+  .hero-cta {
+    flex-direction: row;
+    align-items: center;
+  }
+}
+
+.hero-btn {
+  text-align: center;
+}
+
+.chaos-btn {
+  text-align: center;
+  padding: 10px 14px;
+  font-size: 9px;
+}
+
+.hero-socials {
+  margin-top: var(--space-5);
+  gap: var(--space-4);
+  flex-wrap: wrap;
+}
+
+.scroll-indicator {
+  display: none !important;
+}
+
+/* ==========================================================================
+   4. ABOUT SECTION & STATS GRID ON MOBILE
+   ========================================================================== */
+
+.about-grid {
+  grid-template-columns: 1fr;
+  gap: var(--space-8);
+}
+
+.stats-grid {
+  grid-template-columns: 1fr;
+  gap: var(--space-4);
+}
+
+@media (min-width: 520px) and (max-width: 767px) {
+  .stats-grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: var(--space-5);
+  }
+}
+
+.stat-card {
+  padding: var(--space-2) 0;
+}
+
+@media (max-width: 519px) {
+  .stat-card {
+    border-bottom: 1px solid var(--border-subtle);
+    padding-bottom: var(--space-4);
+  }
+  .stat-card:last-child {
+    border-bottom: none;
+    padding-bottom: 0;
+  }
+}
+
+.stat-title {
+  font-size: 11px;
+}
+
+.stat-value {
+  font-size: 1.25rem;
+}
+
+.stat-muted {
+  font-size: 12px;
+  line-height: 1.5;
+}
+
+/* ==========================================================================
+   5. PROJECTS SECTION — UNIFIED CONSISTENT CARD ORDER ON MOBILE
+   ========================================================================== */
+
+.projects-list {
+  gap: var(--space-16);
+  margin-top: var(--space-8);
+}
+
+.project-row {
+  display: flex !important;
+  flex-direction: column !important;
+  gap: var(--space-6);
+  min-height: auto;
+  padding-bottom: var(--space-12);
+  border-bottom: 1px solid var(--border-subtle);
+}
+
+.project-row .project-info {
+  order: 1 !important;
+  width: 100%;
+}
+
+.project-row .project-mockup-wrapper {
+  order: 2 !important;
+  width: 100%;
+}
+
+.project-watermark {
+  display: none !important;
+}
+
+.project-row-title {
+  font-size: clamp(1.4rem, 5.5vw, 1.85rem);
+  line-height: 1.25;
+  margin-bottom: var(--space-3);
+}
+
+.project-row-desc {
+  font-size: 13px;
+  line-height: 1.6;
+  margin-bottom: var(--space-3);
+}
+
+.project-row-learning {
+  font-size: 12px;
+  line-height: 1.55;
+  margin-bottom: var(--space-5);
+}
+
+.project-row-footer {
+  flex-direction: column;
+  align-items: flex-start;
+  gap: var(--space-4);
+  width: 100%;
+}
+
+.tech-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  width: 100%;
+}
+
+.tech-tags span {
+  font-size: 10px;
+  padding: 3px 7px;
+}
+
+.project-row-links {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  width: 100%;
+}
+
+.project-row-links .btn-ghost {
+  flex: 1 1 calc(50% - 6px);
+  min-width: 130px;
+  text-align: center;
+  padding: 0.55rem 0.8rem;
+  font-size: 10px;
+  box-sizing: border-box;
+}
+
+/* Device Shell Mobile Scaling */
+.device-phone {
+  width: 100%;
+  max-width: 240px;
+  height: 380px;
+  margin: 0 auto;
+}
+
+.device-tablet {
+  width: 100%;
+  max-width: 350px;
+  height: auto;
+  min-height: 220px;
+  margin: 0 auto;
+}
+
+.device-desktop {
+  width: 100%;
+  max-width: 350px;
+  height: auto;
+  min-height: 220px;
+  margin: 0 auto;
+}
+
+/* ==========================================================================
+   6. EDITORIAL QUOTE ON MOBILE
+   ========================================================================== */
+
+.section-quote {
+  padding-top: var(--space-12);
+  padding-bottom: var(--space-12);
+}
+
+.quote-watermark {
+  display: none !important;
+}
+
+.quote-part1,
+.quote-part2 {
+  font-size: clamp(1.35rem, 5vw, 2.1rem) !important;
+  line-height: 1.35 !important;
+  margin-bottom: var(--space-3) !important;
+}
+
+.quote-author {
+  font-size: 12px;
+}
+
+/* ==========================================================================
+   7. POLAROID DECK ("OFF THE CLOCK") ON MOBILE
+   ========================================================================== */
+
+.polaroid-deck {
+  height: auto;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--space-8);
+  padding-top: var(--space-2);
+  padding-bottom: var(--space-6);
+  margin-top: var(--space-6);
+}
+
+.polaroid-card {
+  position: relative !important;
+  left: auto !important;
+  top: auto !important;
+  transform: rotate(0.8deg) !important;
+  width: 100%;
+  max-width: 290px;
+  margin: 0 auto;
+}
+
+.polaroid-card:nth-child(even) {
+  transform: rotate(-0.8deg) !important;
+}
+
+/* ==========================================================================
+   8. CONTACT & FOOTER ON MOBILE
+   ========================================================================== */
+
+.contact-grid {
+  grid-template-columns: 1fr;
+  gap: var(--space-8);
+}
+
+.contact-link-row {
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 4px;
+  padding: 12px 0;
+}
+
+.contact-link-value {
+  font-size: clamp(13px, 4.2vw, 18px);
+  word-break: break-all;
+}
+
+.footer {
+  padding: var(--space-8) 0;
+}
+
+.footer-container {
+  flex-direction: column;
+  gap: var(--space-4);
+  text-align: center;
+}
+
+.footer-socials {
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: var(--space-4);
 }
 
 /* Hide custom cursor on touch/pointer-coarse devices */
@@ -121,61 +459,41 @@
   }
 }
 
+/* ==========================================================================
+   9. TABLET & DESKTOP SYSTEM RESTORATION (768px and up)
+   ========================================================================== */
 
-/* ==================== TABLET & DESKTOP (768px and up) ==================== */
 @media (min-width: 768px) {
-  
-  .about-grid {
-    grid-template-columns: 1.5fr 1fr;
+
+  .nav-wrapper {
+    height: 80px;
   }
 
-  .stats-grid {
-    grid-template-columns: repeat(4, 1fr); /* 4 columns on desktop */
+  .nav {
+    height: 80px;
   }
 
-  .project-row {
-    grid-template-columns: 1fr 1fr;
-    gap: var(--space-12);
-    border-bottom: none;
-    padding-bottom: 0;
+  .nav-name {
+    font-size: var(--text-sm);
+    max-width: none;
+    letter-spacing: 0.1em;
   }
 
-  .project-row-reverse .project-info {
-    grid-column: 2;
+  .theme-dial-label {
+    display: block !important;
   }
 
-  .project-row-reverse .project-mockup-wrapper {
-    grid-column: 1;
-    grid-row: 1;
+  .nav-resume {
+    padding: 0.35rem 0.85rem;
+    font-size: 11px;
   }
 
-  .project-watermark {
-    display: block;
+  .nav-actions {
+    gap: var(--space-4);
   }
 
-  .contact-grid {
-    grid-template-columns: 1.2fr 1fr;
-  }
-
-  /* Polaroid Deck: floating position restore */
-  .polaroid-deck {
-    height: 520px;
-    display: block;
-  }
-
-  .polaroid-card {
-    position: absolute;
-    width: 280px;
-  }
-
-  #cardMusic { left: 5%; top: 40px; transform: rotate(-3deg); }
-  #cardGaming { left: 30%; top: 60px; transform: rotate(2deg); }
-  #cardMaking { left: 55%; top: 30px; transform: rotate(-1deg); }
-  #cardRunning { left: 78%; top: 70px; transform: rotate(4deg); }
-
-  /* Reset mobile nav components */
   .nav-toggle {
-    display: none;
+    display: none !important;
   }
 
   .nav-links {
@@ -188,6 +506,18 @@
     gap: var(--space-4);
     transition: none;
     box-shadow: none;
+    padding: 0;
+    overflow-y: visible;
+  }
+
+  .nav-links li {
+    width: auto;
+    border-bottom: none;
+    padding-bottom: 0;
+  }
+
+  .mobile-drawer-extra {
+    display: none !important;
   }
 
   .nav-links li a {
@@ -198,9 +528,137 @@
   .nav-cta {
     display: inline-block !important;
   }
+
+  .hero {
+    height: 100svh;
+    min-height: auto;
+    padding-top: 0;
+    padding-bottom: 0;
+  }
+
+  .hero-watermark-brace {
+    display: block !important;
+  }
+
+  .hero-headline {
+    font-size: var(--text-hero);
+    margin-bottom: var(--space-8);
+  }
+
+  .hero-cta {
+    flex-direction: row;
+    align-items: center;
+    width: auto;
+  }
+
+  .scroll-indicator {
+    display: flex !important;
+  }
+
+  .about-grid {
+    grid-template-columns: 1.5fr 1fr;
+  }
+
+  .stats-grid {
+    grid-template-columns: repeat(4, 1fr);
+    gap: var(--space-8);
+  }
+
+  .stat-card {
+    border-bottom: none;
+    padding-bottom: 0;
+  }
+
+  /* Projects Desktop 2-Column Split with Alternating Layout */
+  .projects-list {
+    gap: var(--space-24);
+    margin-top: var(--space-12);
+  }
+
+  .project-row {
+    display: grid !important;
+    grid-template-columns: 1fr 1fr !important;
+    gap: var(--space-12);
+    border-bottom: none;
+    padding-bottom: 0;
+  }
+
+  .project-row .project-info {
+    order: unset !important;
+  }
+
+  .project-row .project-mockup-wrapper {
+    order: unset !important;
+  }
+
+  .project-row-reverse .project-info {
+    grid-column: 2;
+  }
+
+  .project-row-reverse .project-mockup-wrapper {
+    grid-column: 1;
+    grid-row: 1;
+  }
+
+  .project-watermark {
+    display: block !important;
+  }
+
+  .project-row-footer {
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  .project-row-links {
+    width: auto;
+  }
+
+  .project-row-links .btn-ghost {
+    flex: none;
+    width: auto;
+  }
+
+  .quote-watermark {
+    display: block !important;
+  }
+
+  .polaroid-deck {
+    height: 520px;
+    display: block;
+    margin-top: var(--space-12);
+  }
+
+  .polaroid-card {
+    position: absolute !important;
+    width: 280px;
+  }
+
+  #cardMusic { left: 5% !important; top: 40px !important; transform: rotate(-3deg) !important; }
+  #cardGaming { left: 30% !important; top: 60px !important; transform: rotate(2deg) !important; }
+  #cardMaking { left: 55% !important; top: 30px !important; transform: rotate(-1deg) !important; }
+  #cardRunning { left: 78% !important; top: 70px !important; transform: rotate(4deg) !important; }
+
+  .contact-grid {
+    grid-template-columns: 1.2fr 1fr;
+  }
+
+  .contact-link-row {
+    flex-direction: row;
+    align-items: baseline;
+    padding: var(--space-4) 0;
+  }
+
+  .footer-container {
+    flex-direction: row;
+    text-align: left;
+  }
 }
 
-/* ==================== LARGE SCREEN SHIFTS (1024px and up) ==================== */
+/* ==========================================================================
+   10. WIDE SCREEN ENHANCEMENTS (1024px and up)
+   ========================================================================== */
+
 @media (min-width: 1024px) {
   .nav-links {
     gap: var(--space-6);

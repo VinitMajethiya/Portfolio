@@ -26,6 +26,11 @@ document.addEventListener('DOMContentLoaded', () => {
   });
 
   function dragStart(e) {
+    // On mobile screens (< 768px), do not initiate drag to keep native vertical page scroll smooth
+    if (window.innerWidth < 768) {
+      return;
+    }
+
     // Avoid dragging on button click or keycaps click
     if (e.target.closest('#macropadGrid') || e.target.closest('.key-cap') || e.target.closest('button')) {
       return;

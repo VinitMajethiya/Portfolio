@@ -791,3 +791,57 @@
     display: none;
   }
 }
+
+@media (max-width: 480px) {
+  .arcade-hud-top {
+    padding: 8px 10px 4px;
+  }
+  .arcade-hud-label {
+    font-size: 9px;
+  }
+  .arcade-hud-score {
+    font-size: 11px;
+  }
+  .arcade-hud-val {
+    font-size: 9px;
+  }
+  .arcade-title-3d {
+    font-size: 20px;
+    letter-spacing: 0.08em;
+  }
+  .arcade-title-sub {
+    font-size: 8px;
+    letter-spacing: 0.15em;
+  }
+  .arcade-menu-options {
+    gap: 8px;
+  }
+  .arcade-menu-option {
+    font-size: 8px;
+    padding: 7px 8px;
+    gap: 6px;
+  }
+  .arcade-menu-badge {
+    display: none;
+  }
+  .arcade-blink-prompt {
+    font-size: 8px;
+  }
+  .arcade-keys-legend {
+    display: none;
+  }
+  .arcade-hud-bottom {
+    height: 40px;
+    padding: 0 8px;
+  }
+  .arcade-hud-btn {
+    font-size: 7px;
+    padding: 4px 6px;
+  }
+  .arcade-credit-count {
+    font-size: 9px;
+  }
+  .arcade-coin-text {
+    font-size: 7px;
+  }
+}
